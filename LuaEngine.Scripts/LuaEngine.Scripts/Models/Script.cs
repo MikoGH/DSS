@@ -1,17 +1,22 @@
-﻿namespace LuaEngine.Scripts.Models.Script;
+﻿namespace LuaEngine.Scripts.WebApi.Models;
 
 /// <summary>
-/// Представление добавления скрипта.
+/// Скрипт.
 /// </summary>
-public class ScriptPostViewModel
+public class Script
 {
+    /// <summary>
+    /// Идентификатор.
+    /// </summary>
+    public Guid Id { get; set; }
+
     /// <summary>
     /// Идентификатор источника.
     /// </summary>
     public Guid SourceId { get; set; }
 
     /// <summary>
-    /// Наименование.
+    /// Название.
     /// </summary>
     public string Name { get; set; }
 

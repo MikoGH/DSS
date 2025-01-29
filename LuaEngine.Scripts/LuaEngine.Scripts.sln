@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaEngine.Scripts.WebApi", "LuaEngine.Scripts\LuaEngine.Scripts.WebApi.csproj", "{1E9CC86C-9DF8-428A-9DE4-5C09D48634D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaEngine.Scripts.Models", "LuaEngine.Scripts.Models\LuaEngine.Scripts.Models.csproj", "{10CBF3A1-8DC7-46EB-BA18-A54C0B9BC8FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaEngine.Scripts.Tests", "LuaEngine.Scripts.Tests\LuaEngine.Scripts.Tests.csproj", "{66610001-D186-4590-A7C9-602496D3E993}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{10CBF3A1-8DC7-46EB-BA18-A54C0B9BC8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10CBF3A1-8DC7-46EB-BA18-A54C0B9BC8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10CBF3A1-8DC7-46EB-BA18-A54C0B9BC8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66610001-D186-4590-A7C9-602496D3E993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66610001-D186-4590-A7C9-602496D3E993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66610001-D186-4590-A7C9-602496D3E993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66610001-D186-4590-A7C9-602496D3E993}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
