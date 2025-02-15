@@ -5,11 +5,11 @@ namespace LuaEngine.Scripts.WebApi.Database;
 
 public class ScriptsContext : DbContext
 {
-    public DbSet<Script> Scripts { get; set; }
+    public DbSet<ProcessScript> ProcessScripts { get; set; }
 
-    public DbSet<Rule> Rules { get; set; }
+    public DbSet<RuleScript> RuleScripts { get; set; }
 
-    public DbSet<CodeVersion> CodeVersions { get; set; }
+    public DbSet<ScriptVersion> ScriptVersions { get; set; }
 
     public ScriptsContext(DbContextOptions<ScriptsContext> options)
         : base(options) { }

@@ -6,19 +6,19 @@
 public static class DbConstants
 {
     /// <summary>
-    /// Название таблицы скриптов.
+    /// Название таблицы скриптов-обработчиков.
     /// </summary>
-    public const string ScriptTableName = "scripts";
+    public const string ProcessScriptTableName = "process_scripts";
 
     /// <summary>
-    /// Название таблицы правил.
+    /// Название таблицы скриптов-правил.
     /// </summary>
-    public const string RuleTableName = "rules";
+    public const string RuleScriptTableName = "rule_scripts";
 
     /// <summary>
-    /// Название таблицы версий кода.
+    /// Название таблицы версий скриптов.
     /// </summary>
-    public const string CodeVersionTableName = "code_versions";
+    public const string ScriptVersionTableName = "script_versions";
 
 
     /// <summary>
@@ -42,9 +42,9 @@ public static class DbConstants
     public const string DescriptionColumn = "description";
 
     /// <summary>
-    /// Столбец Идентификатор скрипта.
+    /// Столбец Идентификатор скрипта-обработчика.
     /// </summary>
-    public const string ScriptIdColumn = "script_id";
+    public const string ProcessScriptIdColumn = "process_script_id";
 
     /// <summary>
     /// Столбец Приоритет.
@@ -72,9 +72,9 @@ public static class DbConstants
     public const string CodeColumn = "code";
 
     /// <summary>
-    /// Столбец Идентификатор правила.
+    /// Столбец Идентификатор скрипта-правила.
     /// </summary>
-    public const string RuleIdColumn = "rule_id";
+    public const string RuleScriptIdColumn = "rule_script_id";
 
     /// <summary>
     /// Столбец Идентификатор родителя.
@@ -101,14 +101,4 @@ public static class DbConstants
     /// Максимальная длина описания скрипта.
     /// </summary>
     public const int ScriptDescriptionMaxLength = 1024;
-
-    /// <summary>
-    /// Максимальная длина статуса версии кода.
-    /// </summary>
-    public const int CodeVersionStatusMaxLength = 16;
-
-    /// <summary>
-    /// Максимальная длина типа версии кода.
-    /// </summary>
-    public const int CodeVersionTypeMaxLength = 16;
 }

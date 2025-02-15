@@ -16,10 +16,10 @@ namespace LuaEngine.Scripts.WebApi.Controllers;
 [Route($"{RoutePrefix}/[controller]")]
 public class ScriptController : Controller
 {
-    private readonly IScriptService _scriptService;
+    private readonly IProcessScriptService _scriptService;
     private readonly IMapper _mapper;
 
-    public ScriptController(IScriptService scriptService,
+    public ScriptController(IProcessScriptService scriptService,
                             IMapper mapper)
     {
         _scriptService = scriptService;
@@ -34,16 +34,16 @@ public class ScriptController : Controller
     /// <param name="token">Токен отмены.</param>
     /// <returns>Коллекция Lua-скриптов.</returns>
     [HttpPost("filter")]
-    public async Task<ActionResult<IEnumerable<ScriptViewModel>>> GetAllAsync(
+    public async Task<ActionResult<IEnumerable<ProcessScriptViewModel>>> GetAllAsync(
         [FromQuery] PagingModel pagingModel,
-        [FromBody] ScriptFilterViewModel filterViewModel,
+        [FromBody] ProcessScriptFilterViewModel filterViewModel,
         CancellationToken token)
     {
-        var filter = _mapper.Map<ScriptFilter>(filterViewModel);
+        var filter = _mapper.Map<ProcessScriptFilter>(filterViewModel);
 
         var scripts = await _scriptService.GetAllAsync(pagingModel, filter, token);
 
-        var scriptViewModels = _mapper.Map<IEnumerable<ScriptViewModel>>(scripts);
+        var scriptViewModels = _mapper.Map<IEnumerable<ProcessScriptViewModel>>(scripts);
 
         return Ok(scriptViewModels);
     }
@@ -55,11 +55,11 @@ public class ScriptController : Controller
     /// <param name="token">Токен отмены.</param>
     /// <returns>Lua-скрипт.</returns>
     [HttpGet("{id}")]
-    public async Task<ActionResult<ScriptViewModel?>> GetAsync([FromRoute] Guid id, CancellationToken token)
+    public async Task<ActionResult<ProcessScriptViewModel?>> GetAsync([FromRoute] Guid id, CancellationToken token)
     {
         var script = await _scriptService.GetAsync(id, token);
 
-        var scriptViewModel = _mapper.Map<ScriptViewModel>(script);
+        var scriptViewModel = _mapper.Map<ProcessScriptViewModel>(script);
 
         return Ok(scriptViewModel);
     }
@@ -71,13 +71,13 @@ public class ScriptController : Controller
     /// <param name="token">Токен отмены.</param>
     /// <returns>Lua-скрипт.</returns>
     [HttpPost()]
-    public async Task<ActionResult<ScriptViewModel?>> AddAsync([FromBody] ScriptPostViewModel scriptPostViewModel, CancellationToken token)
+    public async Task<ActionResult<ProcessScriptViewModel?>> AddAsync([FromBody] ProcessScriptPostViewModel scriptPostViewModel, CancellationToken token)
     {
-        var script = _mapper.Map<Script>(scriptPostViewModel);
+        var script = _mapper.Map<ProcessScript>(scriptPostViewModel);
 
         script = await _scriptService.AddAsync(script, token);
 
-        var scriptViewModel = _mapper.Map<ScriptViewModel>(script);
+        var scriptViewModel = _mapper.Map<ProcessScriptViewModel>(script);
 
         return Ok(scriptViewModel);
     }
@@ -91,16 +91,16 @@ public class ScriptController : Controller
     /// <exception cref="NotFoundResult">Объект не найден.</exception>
     /// <returns>Lua-скрипт.</returns>
     [HttpPut("{id}")]
-    public async Task<ActionResult<ScriptViewModel?>> UpdateAsync([FromRoute] Guid id, [FromBody] ScriptPutViewModel scriptPutViewModel, CancellationToken token)
+    public async Task<ActionResult<ProcessScriptViewModel?>> UpdateAsync([FromRoute] Guid id, [FromBody] ProcessScriptPutViewModel scriptPutViewModel, CancellationToken token)
     {
-        var script = _mapper.Map<Script>(scriptPutViewModel);
+        var script = _mapper.Map<ProcessScript>(scriptPutViewModel);
 
         script = await _scriptService.UpdateAsync(id, script, token);
 
         if (script is null)
             return NotFound();
 
-        var scriptViewModel = _mapper.Map<ScriptViewModel>(script);
+        var scriptViewModel = _mapper.Map<ProcessScriptViewModel>(script);
 
         return Ok(scriptViewModel);
     }
