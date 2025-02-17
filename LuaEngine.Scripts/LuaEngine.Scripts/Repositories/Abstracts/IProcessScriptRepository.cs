@@ -23,7 +23,7 @@ public interface IProcessScriptRepository
     /// </summary>
     /// <param name="id">Идентификатор скрипта.</param>
     /// <param name="token">Токен отмены.</param>
-    /// <returns>скрипт-обработчик.</returns>
+    /// <returns>Скрипт-обработчик.</returns>
     public Task<ProcessScript?> GetAsync(Guid id, CancellationToken token);
 
     /// <summary>

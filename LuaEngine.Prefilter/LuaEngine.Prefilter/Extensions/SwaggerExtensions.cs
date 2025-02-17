@@ -25,7 +25,7 @@ public static class SwaggerExtensions
                     Version = "v1"
                 });
             options.SupportNonNullableReferenceTypes();
-            options.IncludeXmlComments(commentsFilePath);
+            //options.IncludeXmlComments(commentsFilePath);
         });
     }
 

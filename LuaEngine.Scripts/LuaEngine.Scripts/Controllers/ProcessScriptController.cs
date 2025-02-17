@@ -10,16 +10,16 @@ using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
 namespace LuaEngine.Scripts.WebApi.Controllers;
 
 /// <summary>
-/// Контроллер Lua-скриптов.
+/// Контроллер скриптов-обработчиков.
 /// </summary>
 [Controller]
 [Route($"{RoutePrefix}/[controller]")]
-public class ScriptController : Controller
+public class ProcessScriptController : Controller
 {
     private readonly IProcessScriptService _scriptService;
     private readonly IMapper _mapper;
 
-    public ScriptController(IProcessScriptService scriptService,
+    public ProcessScriptController(IProcessScriptService scriptService,
                             IMapper mapper)
     {
         _scriptService = scriptService;
@@ -27,12 +27,12 @@ public class ScriptController : Controller
     }
 
     /// <summary>
-    /// Получить коллекцию Lua-скриптов.
+    /// Получить коллекцию скриптов-обработчиков.
     /// </summary>
     /// <param name="pagingModel">Модель постраничной разбивки.</param>
     /// <param name="filterViewModel">Фильтр.</param>
     /// <param name="token">Токен отмены.</param>
-    /// <returns>Коллекция Lua-скриптов.</returns>
+    /// <returns>Коллекция скриптов-обработчиков.</returns>
     [HttpPost("filter")]
     public async Task<ActionResult<IEnumerable<ProcessScriptViewModel>>> GetAllAsync(
         [FromQuery] PagingModel pagingModel,
@@ -49,11 +49,11 @@ public class ScriptController : Controller
     }
 
     /// <summary>
-    /// Получить Lua-скрипт по идентификатору.
+    /// Получить скрипт-обработчик по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор скрипта.</param>
     /// <param name="token">Токен отмены.</param>
-    /// <returns>Lua-скрипт.</returns>
+    /// <returns>Скрипт-обработчик.</returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<ProcessScriptViewModel?>> GetAsync([FromRoute] Guid id, CancellationToken token)
     {
@@ -65,11 +65,11 @@ public class ScriptController : Controller
     }
 
     /// <summary>
-    /// Добавить Lua-скрипт.
+    /// Добавить скрипт-обработчик.
     /// </summary>
-    /// <param name="scriptPostViewModel">Lua-скрипт.</param>
+    /// <param name="scriptPostViewModel">Скрипт-обработчик.</param>
     /// <param name="token">Токен отмены.</param>
-    /// <returns>Lua-скрипт.</returns>
+    /// <returns>Скрипт-обработчик.</returns>
     [HttpPost()]
     public async Task<ActionResult<ProcessScriptViewModel?>> AddAsync([FromBody] ProcessScriptPostViewModel scriptPostViewModel, CancellationToken token)
     {
@@ -83,13 +83,13 @@ public class ScriptController : Controller
     }
 
     /// <summary>
-    /// Изменить Lua-скрипт по идентификатору.
+    /// Изменить скрипт-обработчик по идентификатору.
     /// </summary>
-    /// <param name="scriptPutViewModel">Lua-скрипт.</param>
+    /// <param name="scriptPutViewModel">Скрипт-обработчик.</param>
     /// <param name="id">Идентификатор скрипта.</param>
     /// <param name="token">Токен отмены.</param>
     /// <exception cref="NotFoundResult">Объект не найден.</exception>
-    /// <returns>Lua-скрипт.</returns>
+    /// <returns>Скрипт-обработчик.</returns>
     [HttpPut("{id}")]
     public async Task<ActionResult<ProcessScriptViewModel?>> UpdateAsync([FromRoute] Guid id, [FromBody] ProcessScriptPutViewModel scriptPutViewModel, CancellationToken token)
     {
@@ -106,7 +106,7 @@ public class ScriptController : Controller
     }
 
     /// <summary>
-    /// Удалить Lua-скрипт по идентификатору.
+    /// Удалить скрипт-обработчик по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор скрипта.</param>
     /// <param name="token">Токен отмены.</param>

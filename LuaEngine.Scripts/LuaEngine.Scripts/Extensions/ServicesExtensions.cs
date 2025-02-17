@@ -18,6 +18,7 @@ public static class ServicesExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddTransient<IProcessScriptService, ProcessScriptService>();
+        services.AddTransient<IRuleScriptService, RuleScriptService>();
         services.AddTransient<IScriptValidator, ScriptValidator>();
 
         return services;
@@ -31,6 +32,7 @@ public static class ServicesExtensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddTransient<IProcessScriptRepository, ProcessScriptRepository>();
+        services.AddTransient<IRuleScriptRepository, RuleScriptRepository>();
 
         return services;
     }

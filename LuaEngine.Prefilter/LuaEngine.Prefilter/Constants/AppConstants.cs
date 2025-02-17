@@ -18,5 +18,35 @@ public class AppConstants
     /// <summary>
     /// Название секции RabbitMQ.
     /// </summary>
-    public const string RabbitMqSectionName = "RabbitMQ";
+    public const string RabbitMqSectionName = "RabbitMq";
+
+    /// <summary>
+    /// Название секции в appsettings откуда брать название очереди исходных данных.
+    /// </summary>
+    public const string RawDataQueueNameSection = "Queues:RawDataQueue";
+
+    /// <summary>
+    /// Название секции в appsettings откуда брать префикс названия очереди.
+    /// </summary>
+    public const string PrefixSection = "CommonPrefix";
+
+    /// <summary>
+    /// Префикс для названия очереди.
+    /// </summary>
+    public const string Queue = "queue:";
+
+    /// <summary>
+    /// Название конфигурационной секции HTTP-клиента.
+    /// </summary>
+    public const string ScriptsConfigSectionName = "ScriptsServiceApi";
+
+    /// <summary>
+    /// Количество попыток для retry политики HTTP-клиента.
+    /// </summary>
+    public const int RetryPolicyAttemptsCount = 2;
+
+    /// <summary>
+    /// Количество секунд между повторными запросами для retry политики HTTP-клиента.
+    /// </summary>
+    public const int RetryPolicySecondsBetweenRetries = 3;
 }
