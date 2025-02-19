@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaEngine.Prefilter", "LuaEngine.Prefilter\LuaEngine.Prefilter.csproj", "{7B96CA77-9B1B-4480-A893-612C552903BE}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{9C48F5C3-9307-4E18-838A-634215E2E575}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7B96CA77-9B1B-4480-A893-612C552903BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B96CA77-9B1B-4480-A893-612C552903BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B96CA77-9B1B-4480-A893-612C552903BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C48F5C3-9307-4E18-838A-634215E2E575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C48F5C3-9307-4E18-838A-634215E2E575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C48F5C3-9307-4E18-838A-634215E2E575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C48F5C3-9307-4E18-838A-634215E2E575}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

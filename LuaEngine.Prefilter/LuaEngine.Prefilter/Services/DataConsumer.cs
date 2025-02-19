@@ -27,9 +27,13 @@ public class DataConsumer : IConsumer<RawData>
     {
         // TODO: извлечь источник
 
+        _logger.LogInformation($"Сообщение доставлено! Тело сообщения: {context.Message.Body}.");
+
         var rules = await _ruleScriptRepository.GetAllAsync(new PagingModel(), new RuleScriptFilterViewModel(), CancellationToken.None);
 
         var processScripts = await _processScriptRepository.GetAllAsync(new PagingModel(), new ProcessScriptFilterViewModel(), CancellationToken.None);
+
+        _logger.LogInformation($"Скриптов-правил получено: {rules.Count()}. Скриптов-обработчиков получено: {processScripts.Count()}.");
 
         // TODO: отфильтровать по префильтру соответствующего источника
 
