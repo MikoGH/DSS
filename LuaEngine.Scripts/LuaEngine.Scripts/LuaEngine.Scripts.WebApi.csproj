@@ -5,7 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Version>0.1.0</Version>
+        <Version>0.2.0</Version>
+        <UserSecretsId>6a914973-d129-443c-8e05-e1b4acf1b2b8</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +16,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
         <PackageReference Include="Monq.Core.MvcExtensions" Version="4.0.0" />
         <PackageReference Include="Monq.Core.Paging" Version="5.0.0" />
         <PackageReference Include="Npgsql" Version="9.0.2" />

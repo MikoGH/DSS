@@ -4,16 +4,16 @@ namespace LuaEngine.Scripts.Tests.Helpers;
 
 public static class ModelsGenerator
 {
-    public static IEnumerable<Script> GenerateScriptCollection(Random sporadic, int count)
+    public static IEnumerable<ProcessScript> GenerateProcessScriptCollection(Random sporadic, int count)
     {
-        var scriptCollection = new List<Script>(count);
+        var scriptCollection = new List<ProcessScript>(count);
 
         var nameCollection = RandomGenerator.GenerateCollectionsOfUniqueStrings(sporadic, count);
         var descriptionCollection = RandomGenerator.GenerateCollectionsOfUniqueStrings(sporadic, count);
 
         for (int i = 0; i < count; i++)
         {
-            var script = new Script()
+            var script = new ProcessScript()
             {
                 Id = RandomGenerator.GenerateGuid(sporadic),
                 SourceId = RandomGenerator.GenerateGuid(sporadic),

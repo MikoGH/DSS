@@ -15,14 +15,14 @@ public static class QueryableExtensions
     /// <param name="query">Запрос.</param>
     /// <param name="paging">Модель постраничной разбивки.</param>
     /// <returns>Записи после постраничной разбивки.</returns>
-    public static IQueryable<CodeVersion> GetPagingWithDefaultOrder(this IQueryable<CodeVersion> query, PagingModel paging)
+    public static IQueryable<ScriptVersion> GetPagingWithDefaultOrder(this IQueryable<ScriptVersion> query, PagingModel paging)
     {
         if (paging.SortCol is null)
         {
-            paging.SortCol = nameof(CodeVersion.ScriptId);
+            paging.SortCol = nameof(ScriptVersion.ProcessScriptId);
             paging.SortDir = "desc";
         }
 
-        return query.WithPaging(paging, null, x => x.ScriptId);
+        return query.WithPaging(paging, null, x => x.ProcessScriptId);
     }
 }
