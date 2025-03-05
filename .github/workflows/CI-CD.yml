@@ -39,13 +39,13 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          docker build -t mlkod/lua-engine:scripts_db
+          docker build -t mlkod/lua-engine:scripts_db .
           docker push mlkod/lua-engine:scripts_db
 
           docker build -t mlkod/lua-engine:scripts_api ./LuaEngine.Scripts/LuaEngine.Scripts
           docker push mlkod/lua-engine:scripts_api
           
-          docker build -t mlkod/lua-engine:rabbitmq
+          docker build -t mlkod/lua-engine:rabbitmq .
           docker push mlkod/lua-engine:rabbitmq
           
       - name: Shut down services
