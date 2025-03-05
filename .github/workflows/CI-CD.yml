@@ -37,10 +37,11 @@ jobs:
         run: |
           docker compose -f LuaEngine.Prefilter/docker-compose.yml up -d
 
-      - name: Push Docker images
+      - name: Build, push, up Docker images
         run: |
-          # docker compose -f LuaEngine.Prefilter/docker-compose.yml build
+          docker compose -f LuaEngine.Prefilter/docker-compose.yml build
           docker compose -f LuaEngine.Prefilter/docker-compose.yml push
+          docker compose -f LuaEngine.Prefilter/docker-compose.yml up -d
           # docker build -t mlkod/lua-engine:scripts_db .
           # docker push mlkod/lua-engine:scripts_db
 
