@@ -1,16 +1,16 @@
 services:
-  prefilter_api:
-    image: ${DOCKER_REGISTRY-}luaengineprefilter
-    build:
-      context: .
-      dockerfile: LuaEngine.Prefilter/Dockerfile
-    ports:
-      - "8080:8080"
-      - "8081:8081"
-    container_name: prefilter_api
-    depends_on:
-      - scripts_api
-      - rabbitmq  
+  # prefilter_api:
+  #   image: ${DOCKER_REGISTRY-}luaengineprefilter
+  #   build:
+  #     context: .
+  #     dockerfile: LuaEngine.Prefilter/Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #     - "8081:8081"
+  #   container_name: prefilter_api
+  #   depends_on:
+  #     - scripts_api
+  #     - rabbitmq  
   scripts_api:
     image: ${DOCKER_REGISTRY-}luaenginescripts
     build:

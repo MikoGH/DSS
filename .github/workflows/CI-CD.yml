@@ -1,0 +1,51 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Build Docker images
+        run: |
+          docker compose -f LuaEngine.Prefilter/docker-compose.yml build
+
+      - name: Run services
+        run: |
+          docker compose -f LuaEngine.Prefilter/docker-compose.yml up -d
+
+      - name: Build and push Docker images
+        run: |
+          docker push mlkod/lua-engine:scripts_db
+
+          docker build -t mlkod/lua-engine:scripts_api ./LuaEngine.Scripts/LuaEngine.Scripts
+          docker push mlkod/lua-engine:scripts_api
+          
+          docker push mlkod/lua-engine:rabbitmq
+          
+      - name: Shut down services
+        run: |
+          docker compose -f LuaEngine.Prefilter/docker-compose.yml down
