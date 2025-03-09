@@ -41,20 +41,6 @@ jobs:
         run: |
           docker compose -f LuaEngine.Prefilter/docker-compose.yml up -d
 
-      # - name: Build, push, up Docker images
-      #   run: |
-      #     docker compose -f LuaEngine.Prefilter/docker-compose.yml build
-      #     docker compose -f LuaEngine.Prefilter/docker-compose.yml push
-      #     docker compose -f LuaEngine.Prefilter/docker-compose.yml up -d
-          # docker build -t mlkod/lua-engine:scripts_db .
-          # docker push mlkod/lua-engine:scripts_db
-
-          # docker build -t mlkod/lua-engine:scripts_api ./LuaEngine.Scripts/LuaEngine.Scripts
-          # docker push mlkod/lua-engine:scripts_api
-          
-          # docker build -t mlkod/lua-engine:rabbitmq .
-          # docker push mlkod/lua-engine:rabbitmq
-          
       - name: Shut down services
         run: |
           docker compose -f LuaEngine.Prefilter/docker-compose.yml down

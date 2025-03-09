@@ -1,6 +1,7 @@
 services:
   # prefilter_api:
-  #   image: ${DOCKER_REGISTRY-}luaengineprefilter
+  #   image: mlkod/lua-engine:prefilter_api
+  #   # image: ${DOCKER_REGISTRY-}luaengineprefilter
   #   build:
   #     context: .
   #     dockerfile: LuaEngine.Prefilter/Dockerfile
@@ -11,9 +12,8 @@ services:
   #   depends_on:
   #     - scripts_api
   #     - rabbitmq
-  #     - nexus
   #   volumes:
-  #     - C:/Users/Vlada/Desktop/Folders/GitHub/DSS/LuaEngine.Scripts/LuaEngine.Scripts.Models/bin/Debug:/root/.nuget/packages
+  #     - ../LuaEngine.Scripts/LuaEngine.Scripts.Models/bin/Debug:/root/.nuget/packages
   scripts_api:
     image: mlkod/lua-engine:scripts_api
     # image: ${DOCKER_REGISTRY-}luaenginescripts
@@ -43,28 +43,22 @@ services:
     volumes: 
       - db_data:/var/lib/postgresql/data
     container_name: scripts_db
-  # rabbitmq:
-  #   # image: mlkod/lua-engine:rabbitmq
-  #   image: rabbitmq:3.10.7-management
-  #   hostname: rabbitmq
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
-  #   environment:
-  #     - RABBITMQ_DEFAULT_USER=rmuser
-  #     - RABBITMQ_DEFAULT_PASS=rmpassword
-  #   volumes:
-  #     - rabbitmq_data:/var/lib/rabbitmq/data
-  #   container_name: rabbitmq
-  # nexus:
-  #   image: sonatype/nexus3:latest
-  #   ports:
-  #     - "8091:8091"
-  #   volumes:
-  #     - nexus_data:/nexus_data
-  #   restart: always
-  #   container_name: nexus
+  rabbitmq:
+    image: mlkod/lua-engine:rabbitmq
+    # image: rabbitmq:3.10.7-management
+    build:
+      context: ../rabbitmq
+      dockerfile: Dockerfile
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rmuser
+      - RABBITMQ_DEFAULT_PASS=rmpassword
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/data
+    container_name: rabbitmq
 volumes:
   db_data:
-  # rabbitmq_data:
-  # nexus_data:
+  rabbitmq_data:
