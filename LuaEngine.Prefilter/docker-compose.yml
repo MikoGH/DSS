@@ -27,7 +27,7 @@ services:
     depends_on:
       - scripts_db
     volumes:
-      - C:/Users/Vlada/Desktop/Folders/GitHub/DSS/LuaEngine.Scripts/LuaEngine.Scripts.Models/bin/Debug:/root/.nuget/packages
+      - ../LuaEngine.Scripts/LuaEngine.Scripts.Models/bin/Debug:/root/.nuget/packages
   scripts_db:
     image: mlkod/lua-engine:scripts_db
     # image: postgres:latest
