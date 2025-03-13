@@ -1,6 +1,7 @@
 ﻿using LuaEngine.LuaOrchestrator.Models.Options;
 using LuaEngine.LuaOrchestrator.Services;
 using MassTransit;
+using System.Reflection;
 using static LuaEngine.LuaOrchestrator.Constants.AppConstants;
 
 namespace LuaEngine.LuaOrchestrator.Extensions;
@@ -15,9 +16,10 @@ public static class RabbitMqExtensions
     /// </summary>
     /// <param name="services">Коллекция дескрипторов служб.</param>
     /// <param name="configuration">Конфигурация.</param>
+    /// <param name="assemblies">Сборки, в которых есть потребители.</param>
     /// <returns>Коллекция дескрипторов служб.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRabbitMq(this IServiceCollection services, IConfiguration configuration, params Assembly[] assemblies)
     {
         if (services is null)
             throw new ArgumentNullException(nameof(services));
@@ -39,7 +41,7 @@ public static class RabbitMqExtensions
 
         services.AddMassTransit(x =>
         {
-            x.AddConsumer<RawDataConsumer>();
+            x.AddConsumers(assemblies);
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -50,6 +52,8 @@ public static class RabbitMqExtensions
 
                     h.RequestedConnectionTimeout(rabbitMqConfig.RequestedConnectionTimeout);
                 });
+
+                //cfg.AutoStart = true;
 
                 cfg.ConfigureEndpoints(context);
             });

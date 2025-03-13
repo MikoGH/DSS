@@ -1,4 +1,5 @@
-﻿using LuaEngine.Prefilter.Models;
+﻿using LuaEngine.LuaOrchestrator.Models;
+using LuaEngine.Prefilter.Models;
 using LuaEngine.Prefilter.Repositories.Abstractions;
 using LuaEngine.Scripts.Models.Rule;
 using LuaEngine.Scripts.Models.Script;
@@ -15,12 +16,17 @@ public class DataConsumer : IConsumer<RawData>
     private readonly ILogger<DataConsumer> _logger;
     private readonly IRuleScriptRepository _ruleScriptRepository;
     private readonly IProcessScriptRepository _processScriptRepository;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public DataConsumer(ILogger<DataConsumer> logger, IRuleScriptRepository ruleScriptRepository, IProcessScriptRepository processScriptRepository)
+    public DataConsumer(ILogger<DataConsumer> logger,
+        IRuleScriptRepository ruleScriptRepository,
+        IProcessScriptRepository processScriptRepository,
+        IPublishEndpoint publishEndpoint)
     {
         _logger = logger;
         _ruleScriptRepository = ruleScriptRepository;
         _processScriptRepository = processScriptRepository;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task Consume(ConsumeContext<RawData> context)
@@ -39,6 +45,15 @@ public class DataConsumer : IConsumer<RawData>
 
         // TODO: отфильтровать по правилам соответствующего источника
 
-        // TODO: отправить в очередь
+        // TODO: сформировать filteredData с использованием полученного скрипта-обработчика
+        var filteredData = new FilteredData()
+        {
+            Script = "test",
+            Body = context.Message.Body
+        };
+
+        await _publishEndpoint.Publish<FilteredData>(filteredData);
+
+        _logger.LogInformation($"Сообщение отправлено в очередь! Тело сообщения: {filteredData.Body}.");
     }
 }

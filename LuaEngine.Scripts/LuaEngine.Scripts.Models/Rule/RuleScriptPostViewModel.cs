@@ -6,11 +6,6 @@
 public class RuleScriptPostViewModel
 {
     /// <summary>
-    /// Идентификатор.
-    /// </summary>
-    public Guid Id { get; set; }
-
-    /// <summary>
     /// Идентификатор источника.
     /// </summary>
     public Guid SourceId { get; set; }

@@ -4,22 +4,22 @@ using LuaEngine.Scripts.WebApi.Models;
 using LuaEngine.Scripts.WebApi.Services.Abstracts;
 using Microsoft.AspNetCore.Mvc;
 using Monq.Core.Paging.Models;
-using LuaEngine.Scripts.Models.Rule;
+using LuaEngine.Scripts.Models.ScriptVersion;
 using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
 
 namespace LuaEngine.Scripts.WebApi.Controllers;
 
 /// <summary>
-/// Контроллер скриптов-правил.
+/// Контроллер версий скриптов.
 /// </summary>
 [Controller]
 [Route($"{RoutePrefix}/[controller]")]
-public class RuleScriptController : Controller
+public class ScriptVersionController : Controller
 {
-    private readonly IRuleScriptService _ruleScriptService;
+    private readonly IScriptVersionService _ruleScriptService;
     private readonly IMapper _mapper;
 
-    public RuleScriptController(IRuleScriptService ruleScriptService,
+    public ScriptVersionController(IScriptVersionService ruleScriptService,
                             IMapper mapper)
     {
         _ruleScriptService = ruleScriptService;
@@ -27,65 +27,63 @@ public class RuleScriptController : Controller
     }
 
     /// <summary>
-    /// Получить коллекцию скриптов-правил.
+    /// Получить коллекцию версий скриптов.
     /// </summary>
     /// <param name="pagingModel">Модель постраничной разбивки.</param>
     /// <param name="filterViewModel">Фильтр.</param>
     /// <param name="token">Токен отмены.</param>
-    /// <returns>Коллекция скриптов-правил.</returns>
+    /// <returns>Коллекция версий скриптов.</returns>
     [HttpPost("filter")]
-    public async Task<ActionResult<IEnumerable<RuleScriptViewModel>>> GetAllAsync(
+    public async Task<ActionResult<IEnumerable<ScriptVersionViewModel>>> GetAllAsync(
         [FromQuery] PagingModel pagingModel,
-        [FromBody] RuleScriptFilterViewModel filterViewModel,
+        [FromBody] ScriptVersionFilterViewModel filterViewModel,
         CancellationToken token)
     {
-        var filter = _mapper.Map<RuleScriptFilter>(filterViewModel);
+        var filter = _mapper.Map<ScriptVersionFilter>(filterViewModel);
 
         var scripts = await _ruleScriptService.GetAllAsync(pagingModel, filter, token);
 
-        var scriptViewModels = _mapper.Map<IEnumerable<RuleScriptViewModel>>(scripts);
+        var scriptViewModels = _mapper.Map<IEnumerable<ScriptVersionViewModel>>(scripts);
 
         return Ok(scriptViewModels);
     }
 
     /// <summary>
-    /// Получить скрипт-правило по идентификатору.
+    /// Получить версию скрипта по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор скрипта.</param>
     /// <param name="token">Токен отмены.</param>
     /// <returns>Скрипт-правило.</returns>
     [HttpGet("{id}")]
-    public async Task<ActionResult<RuleScriptViewModel?>> GetAsync(
-        [FromRoute] Guid id,
-        CancellationToken token)
+    public async Task<ActionResult<ScriptVersionViewModel?>> GetAsync([FromRoute] Guid id, CancellationToken token)
     {
         var script = await _ruleScriptService.GetAsync(id, token);
 
-        var scriptViewModel = _mapper.Map<RuleScriptViewModel>(script);
+        var scriptViewModel = _mapper.Map<ScriptVersionViewModel>(script);
 
         return Ok(scriptViewModel);
     }
 
     /// <summary>
-    /// Добавить скрипт-правило.
+    /// Добавить версию скрипта.
     /// </summary>
     /// <param name="scriptPostViewModel">Скрипт-правило.</param>
     /// <param name="token">Токен отмены.</param>
     /// <returns>Скрипт-правило.</returns>
     [HttpPost()]
-    public async Task<ActionResult<RuleScriptViewModel?>> AddAsync([FromBody] RuleScriptPostViewModel scriptPostViewModel, CancellationToken token)
+    public async Task<ActionResult<ScriptVersionViewModel?>> AddAsync([FromBody] ScriptVersionPostViewModel scriptPostViewModel, CancellationToken token)
     {
-        var script = _mapper.Map<RuleScript>(scriptPostViewModel);
+        var script = _mapper.Map<ScriptVersion>(scriptPostViewModel);
 
         script = await _ruleScriptService.AddAsync(script, token);
 
-        var scriptViewModel = _mapper.Map<RuleScriptViewModel>(script);
+        var scriptViewModel = _mapper.Map<ScriptVersionViewModel>(script);
 
         return Ok(scriptViewModel);
     }
 
     /// <summary>
-    /// Изменить скрипт-правило по идентификатору.
+    /// Изменить версию скрипта по идентификатору.
     /// </summary>
     /// <param name="scriptPutViewModel">Скрипт-правило.</param>
     /// <param name="id">Идентификатор скрипта.</param>
@@ -93,22 +91,22 @@ public class RuleScriptController : Controller
     /// <exception cref="NotFoundResult">Объект не найден.</exception>
     /// <returns>Скрипт-правило.</returns>
     [HttpPut("{id}")]
-    public async Task<ActionResult<RuleScriptViewModel?>> UpdateAsync([FromRoute] Guid id, [FromBody] RuleScriptPutViewModel scriptPutViewModel, CancellationToken token)
+    public async Task<ActionResult<ScriptVersionViewModel?>> UpdateAsync([FromRoute] Guid id, [FromBody] ScriptVersionPutViewModel scriptPutViewModel, CancellationToken token)
     {
-        var script = _mapper.Map<RuleScript>(scriptPutViewModel);
+        var script = _mapper.Map<ScriptVersion>(scriptPutViewModel);
 
         script = await _ruleScriptService.UpdateAsync(id, script, token);
 
         if (script is null)
             return NotFound();
 
-        var scriptViewModel = _mapper.Map<RuleScriptViewModel>(script);
+        var scriptViewModel = _mapper.Map<ScriptVersionViewModel>(script);
 
         return Ok(scriptViewModel);
     }
 
     /// <summary>
-    /// Удалить скрипт-правило по идентификатору.
+    /// Удалить версию скрипта по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор скрипта.</param>
     /// <param name="token">Токен отмены.</param>

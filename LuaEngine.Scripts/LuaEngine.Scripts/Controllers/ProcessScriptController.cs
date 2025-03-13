@@ -55,7 +55,9 @@ public class ProcessScriptController : Controller
     /// <param name="token">Токен отмены.</param>
     /// <returns>Скрипт-обработчик.</returns>
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProcessScriptViewModel?>> GetAsync([FromRoute] Guid id, CancellationToken token)
+    public async Task<ActionResult<ProcessScriptViewModel?>> GetAsync(
+        [FromRoute] Guid id,
+        CancellationToken token)
     {
         var script = await _scriptService.GetAsync(id, token);
 

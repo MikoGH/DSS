@@ -18,7 +18,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddAutoMapper(typeof(Program));
     builder.Services.AddLuaEngineSwagger();
-    builder.Services.AddRabbitMq(builder.Configuration);
+    builder.Services.AddRabbitMq(builder.Configuration, typeof(Program).Assembly);
     builder.Services.AddServices();
 
     var app = builder.Build();
