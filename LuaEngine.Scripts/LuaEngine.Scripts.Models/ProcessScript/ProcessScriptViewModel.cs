@@ -1,10 +1,15 @@
-﻿namespace LuaEngine.Scripts.Models.Script;
+﻿namespace LuaEngine.Scripts.Models.ProcessScript;
 
 /// <summary>
-/// Представление добавления скрипта-обработчика.
+/// Представление скрипта-обработчика.
 /// </summary>
-public class ProcessScriptPostViewModel
+public class ProcessScriptViewModel
 {
+    /// <summary>
+    /// Идентификатор.
+    /// </summary>
+    public Guid Id { get; set; }
+
     /// <summary>
     /// Идентификатор источника.
     /// </summary>

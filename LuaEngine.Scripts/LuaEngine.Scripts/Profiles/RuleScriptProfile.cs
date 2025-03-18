@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LuaEngine.Scripts.WebApi.Models.Filters;
 using LuaEngine.Scripts.WebApi.Models;
-using LuaEngine.Scripts.Models.Rule;
+using LuaEngine.Scripts.Models.RuleScript;
 
 namespace LuaEngine.Scripts.WebApi.Profiles;
 

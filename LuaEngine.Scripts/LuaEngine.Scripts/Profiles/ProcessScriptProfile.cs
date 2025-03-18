@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LuaEngine.Scripts.Models.Script;
+using LuaEngine.Scripts.Models.ProcessScript;
 using LuaEngine.Scripts.WebApi.Models;
 using LuaEngine.Scripts.WebApi.Models.Filters;
 

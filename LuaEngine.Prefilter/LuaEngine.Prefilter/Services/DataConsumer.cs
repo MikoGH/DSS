@@ -1,10 +1,17 @@
-﻿using LuaEngine.LuaOrchestrator.Models;
+﻿using LuaEngine.Automaton.Models;
+using LuaEngine.Automaton.Runner;
+using LuaEngine.LuaOrchestrator.Models;
 using LuaEngine.Prefilter.Models;
 using LuaEngine.Prefilter.Repositories.Abstractions;
 using LuaEngine.Scripts.Models.Rule;
-using LuaEngine.Scripts.Models.Script;
+using LuaEngine.Scripts.Models.ScriptVersion;
 using MassTransit;
 using Monq.Core.Paging.Models;
+using System.Text.Json;
+using LuaEngine.Scripts.Models.Enums;
+using LuaEngine.Automaton.Models.Enums;
+using NLua;
+using Polly;
 
 namespace LuaEngine.Prefilter.Services;
 
@@ -14,46 +21,261 @@ namespace LuaEngine.Prefilter.Services;
 public class DataConsumer : IConsumer<RawData>
 {
     private readonly ILogger<DataConsumer> _logger;
-    private readonly IRuleScriptRepository _ruleScriptRepository;
-    private readonly IProcessScriptRepository _processScriptRepository;
+    private readonly IScriptVersionRepository _scriptVersionRepository;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly AutomatonRunnerContext _automatonRunnerContext;
 
     public DataConsumer(ILogger<DataConsumer> logger,
-        IRuleScriptRepository ruleScriptRepository,
-        IProcessScriptRepository processScriptRepository,
-        IPublishEndpoint publishEndpoint)
+        IScriptVersionRepository scriptVersionRepository,
+        IPublishEndpoint publishEndpoint,
+        AutomatonRunnerContext automatonRunnerContext)
     {
         _logger = logger;
-        _ruleScriptRepository = ruleScriptRepository;
-        _processScriptRepository = processScriptRepository;
+        _scriptVersionRepository = scriptVersionRepository;
         _publishEndpoint = publishEndpoint;
+        _automatonRunnerContext = automatonRunnerContext;
     }
 
+    // TODO: подумать, на каком уровне какие ошибки обрабатывать и логировать, + вынести всю обработку в отдельный сервис
     public async Task Consume(ConsumeContext<RawData> context)
     {
-        // TODO: извлечь источник
-
         _logger.LogInformation($"Сообщение доставлено! Тело сообщения: {context.Message.Body}.");
 
-        var rules = await _ruleScriptRepository.GetAllAsync(new PagingModel(), new RuleScriptFilterViewModel(), CancellationToken.None);
+        // TODO: обернуть в проверку что десериализация возможна, разобраться как десериализовать в object
+        //var variables = JsonSerializer.Deserialize<Dictionary<string, int>>(context.Message.Body).ToDictionary(x => x.Key, x => (object?)x.Value);
+        JsonElement deserializedBody = JsonSerializer.Deserialize<JsonElement>(context.Message.Body);
+        var variables = (Dictionary<string, object?>)ConvertJsonElementValue(deserializedBody);
 
-        var processScripts = await _processScriptRepository.GetAllAsync(new PagingModel(), new ProcessScriptFilterViewModel(), CancellationToken.None);
+        // получение активных префильтра и правил для источника
+        var ruleScriptVersions = await GetRuleScriptVersions(context.Message.SourceId);
 
-        _logger.LogInformation($"Скриптов-правил получено: {rules.Count()}. Скриптов-обработчиков получено: {processScripts.Count()}.");
+        _logger.LogInformation($"Версий скриптов-правил получено: {ruleScriptVersions.Count()}.");
 
-        // TODO: отфильтровать по префильтру соответствующего источника
+        var prefilter = ruleScriptVersions.FirstOrDefault(x => x.RuleScript.Prefilter);
+        var ruleScripts = ruleScriptVersions
+            .Where(x => !x.RuleScript.Prefilter)
+            .OrderBy(x => x.RuleScript.Priority)
+            .ToList();
 
-        // TODO: отфильтровать по правилам соответствующего источника
+        // префильтр
+        var prefilterResult = await ExecutePrefilter(prefilter, context.Message.SourceId, variables);
+        if (!prefilterResult)
+            return;
 
-        // TODO: сформировать filteredData с использованием полученного скрипта-обработчика
+        // правила
+        var ruleScript = await ExecuteRuleScripts(ruleScripts, context.Message.SourceId, variables);
+        if (ruleScript is null)
+            return;
+
+        // получение скрипта-обработчика
+        var processScript = await GetProcessScriptVersion(ruleScript.RuleScript);
+        if (processScript is null)
+            return;
+
         var filteredData = new FilteredData()
         {
-            Script = "test",
+            Script = processScript.Code,
             Body = context.Message.Body
         };
 
         await _publishEndpoint.Publish<FilteredData>(filteredData);
 
         _logger.LogInformation($"Сообщение отправлено в очередь! Тело сообщения: {filteredData.Body}.");
+    }
+
+    private Task<IEnumerable<ScriptVersionViewModel>> GetRuleScriptVersions(Guid sourceId)
+    {
+        var scriptVersionFilter = new ScriptVersionFilterViewModel()
+        {
+            Types = [ScriptType.Rule],
+            SourceIds = [sourceId],
+            Enabled = [true],
+            Status = [Status.Executable]
+        };
+        var scriptVersionIncludeOptions = new ScriptVersionIncludeViewModel()
+        {
+            IncludeRuleScript = true
+        };
+
+        return _scriptVersionRepository.GetAllAsync(new PagingModel(), scriptVersionIncludeOptions, scriptVersionFilter, CancellationToken.None);
+    }
+
+    private async Task<ScriptVersionViewModel?> GetProcessScriptVersion(RuleScriptViewModel ruleScript)
+    {
+        var scriptVersionFilter = new ScriptVersionFilterViewModel()
+        {
+            ProcessScriptIds = [(Guid)ruleScript.ProcessScriptId],
+            Status = [Status.Executable]
+        };
+        var scriptVersionIncludeOptions = new ScriptVersionIncludeViewModel();
+
+        var processScriptVersions = await _scriptVersionRepository.GetAllAsync(new PagingModel(), scriptVersionIncludeOptions, scriptVersionFilter, CancellationToken.None);
+
+        var processScriptVersion = processScriptVersions.FirstOrDefault();
+
+        if (processScriptVersion is null)
+        {
+            _logger.LogError($"Скрипта-обработчика с id {ruleScript.ProcessScriptId} не существует или отсутствует исполняемая версия.");
+            return null;
+        }
+
+        return processScriptVersion;
+    }
+
+    private ValueTask<EngineParsedEventResult> ExecuteScript(string script, Dictionary<string, object?> variables)
+    {
+        //IOptions<AutomatonEngineOptions> engineOptions = new OptionsWrapper<AutomatonEngineOptions>(new AutomatonEngineOptions());
+        //var strategy = new DefaultScriptStrategy();
+        //var loggerFactory = new AutomatonLoggerFactory(new StubLoggerFactory(), engineOptions);
+        //var logger = loggerFactory.CreateAutomatonLogger<AutomatonRunnerContext>();
+
+        // TODO: вероятно, добавить Id версии скрипта в модель, чтобы можно было отследить по логам в оркестраторе
+        var ruleEvent = new EngineParsedEvent
+        {
+            Script = script,
+            Variables = variables
+        };
+
+        //using var runnerContext = new AutomatonRunnerContext(strategy, logger, engineOptions);
+        // TODO: при выполнении 2+ скриптов в одном контексте выдаёт ошибку, надо разобраться, скорее всего что-то лишнее нужно диспоузить
+        return _automatonRunnerContext.Run(ruleEvent);
+    }
+
+    private async Task<bool> ExecutePrefilter(ScriptVersionViewModel? prefilter, Guid sourceId, Dictionary<string, object?> variables)
+    {
+        if (prefilter is null)
+        {
+            _logger.LogWarning($"Префильтра для источника {sourceId} не существует.");
+            // TODO: решить, продолжать выполнение при отсутствии префильтра или нет. Пока продолжаем, поэтому true
+            return true;
+        }
+
+        var engineResult = await ExecuteScript(prefilter.Code, variables);
+
+        if (engineResult.Status != ExecutingResult.Success)
+        {
+            _logger.LogError($"Префильтр для источника {sourceId} завершился с ошибкой. Статус: {engineResult.Status}. Сообщение: {engineResult.Message}. Id версии скрипта: {prefilter.Id}.");
+            return false;
+        }
+
+        if (engineResult.Value is null || engineResult.Value.GetType() != typeof(bool))
+        {
+            _logger.LogWarning($"Префильтр для источника {sourceId} возвращает не bool. Id версии скрипта: {prefilter.Id}.");
+            // TODO: решить, продолжать выполнение при префильтре который возвращает не bool. Пока прекращаем выполнение, поэтому false
+            return false;
+        }
+
+        var prefilterResult = (bool)engineResult.Value;
+
+        _logger.LogInformation($"Префильтр для источника {sourceId} выполнился успешно. Результат выполнения скрипта: {prefilterResult}");
+
+        return prefilterResult;
+    }
+
+    private async Task<ScriptVersionViewModel?> ExecuteRuleScripts(IEnumerable<ScriptVersionViewModel> ruleScriptVersions, Guid sourceId, Dictionary<string, object?> variables)
+    {
+        if (ruleScriptVersions.Count() == 0)
+        {
+            _logger.LogInformation($"Активных правил для источника {sourceId} не существует.");
+            return null;
+        }
+
+        foreach (var ruleScriptVersion in ruleScriptVersions)
+        {
+            var engineResult = await ExecuteScript(ruleScriptVersion.Code, variables);
+
+            if (engineResult.Status != ExecutingResult.Success)
+            {
+                _logger.LogError($"Правило для источника {sourceId} завершилось с ошибкой. Статус: {engineResult.Status}. Сообщение: {engineResult.Message}. Id версии скрипта: {ruleScriptVersion.Id}.");
+                continue;
+            }
+
+            if (engineResult.Value is null || engineResult.Value.GetType() != typeof(bool))
+            {
+                _logger.LogWarning($"Правило для источника {sourceId} возвращает не bool. Id версии скрипта: {ruleScriptVersion.Id}.");
+                continue;
+            }
+
+            var ruleScriptResult = (bool)engineResult.Value;
+
+            _logger.LogInformation($"Правило для источника {sourceId} выполнилось успешно. Результат выполнения скрипта: {ruleScriptResult}");
+
+            if (ruleScriptResult && ruleScriptVersion.RuleScript.ProcessScriptId is null)
+            {
+                _logger.LogError($"У прошедшего скрипта-правила отсутствует связь со скриптом-обработчиком. Id версии скрипта: {ruleScriptVersion.Id}.");
+                return null;
+            }
+
+            if (ruleScriptResult)
+                return ruleScriptVersion;
+        }
+
+        _logger.LogInformation($"Не прошло ни одно правило для источника {sourceId}.");
+
+        return null;
+    }
+
+    //private static Dictionary<string, object?> ConvertJsonToDictionary(string json)
+    //{
+    //    var dictionary = JsonSerializer.Deserialize<Dictionary<string, object?>>(json);
+
+    //    foreach (var key in dictionary.Keys)
+    //    {
+    //        var value = dictionary[key];
+
+    //        // Если значение является LuaTable, рекурсивно конвертируем
+    //        if (value is LuaTable nestedTable)
+    //        {
+    //            dictionary[key.ToString()] = ConvertLuaTableToDictionary(nestedTable);
+    //        }
+    //        else
+    //        {
+    //            dictionary[key.ToString()] = value;
+    //        }
+    //    }
+    //}
+
+    private static object? ConvertJsonElementValue(JsonElement jsonElement)
+    {
+        switch (jsonElement.ValueKind)
+        {
+            case JsonValueKind.Object:
+                var dictionary = JsonSerializer.Deserialize<Dictionary<string, object?>>(jsonElement);
+                foreach (var key in dictionary.Keys)
+                {
+                    dictionary[key] = ConvertJsonElementValue((JsonElement)dictionary[key]);
+                }
+                return dictionary;
+
+            case JsonValueKind.Array:
+                var list = new List<object?>();
+                foreach (var item in jsonElement.EnumerateArray())
+                {
+                    list.Add(ConvertJsonElementValue(item));
+                }
+                return list;
+
+            case JsonValueKind.String:
+                return jsonElement.GetString();
+
+            case JsonValueKind.Number:
+                if (jsonElement.TryGetDouble(out double doubleValue))
+                {
+                    return doubleValue;
+                }
+                break;
+
+            case JsonValueKind.True:
+            case JsonValueKind.False:
+                return jsonElement.GetBoolean();
+
+            case JsonValueKind.Null:
+                return null;
+
+            default:
+                return jsonElement.ToString();
+        }
+
+        return null;
     }
 }

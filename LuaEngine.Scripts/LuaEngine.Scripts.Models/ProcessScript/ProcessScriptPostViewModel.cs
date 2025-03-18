@@ -1,9 +1,9 @@
-﻿namespace LuaEngine.Scripts.Models.Script;
+﻿namespace LuaEngine.Scripts.Models.ProcessScript;
 
 /// <summary>
-/// Представление обновления скрипта-обработчика.
+/// Представление добавления скрипта-обработчика.
 /// </summary>
-public class ProcessScriptPutViewModel
+public class ProcessScriptPostViewModel
 {
     /// <summary>
     /// Идентификатор источника.

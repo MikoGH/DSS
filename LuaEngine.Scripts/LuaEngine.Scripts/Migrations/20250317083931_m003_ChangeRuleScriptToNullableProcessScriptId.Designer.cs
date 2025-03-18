@@ -3,6 +3,7 @@ using System;
 using LuaEngine.Scripts.WebApi.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LuaEngine.Scripts.WebApi.Migrations
 {
     [DbContext(typeof(ScriptsContext))]
-    partial class ScriptsContextModelSnapshot : ModelSnapshot
+    [Migration("20250317083931_m003_ChangeRuleScriptToNullableProcessScriptId")]
+    partial class m003_ChangeRuleScriptToNullableProcessScriptId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,8 +83,6 @@ namespace LuaEngine.Scripts.WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProcessScriptId");
-
                     b.HasIndex("SourceId");
 
                     b.ToTable("rule_scripts", (string)null);
@@ -134,15 +135,6 @@ namespace LuaEngine.Scripts.WebApi.Migrations
                     b.HasIndex("Type");
 
                     b.ToTable("script_versions", (string)null);
-                });
-
-            modelBuilder.Entity("LuaEngine.Scripts.WebApi.Models.RuleScript", b =>
-                {
-                    b.HasOne("LuaEngine.Scripts.WebApi.Models.ProcessScript", "ProcessScript")
-                        .WithMany()
-                        .HasForeignKey("ProcessScriptId");
-
-                    b.Navigation("ProcessScript");
                 });
 
             modelBuilder.Entity("LuaEngine.Scripts.WebApi.Models.ScriptVersion", b =>

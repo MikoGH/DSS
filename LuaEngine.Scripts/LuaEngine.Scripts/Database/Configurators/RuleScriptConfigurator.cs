@@ -15,7 +15,7 @@ public class RuleScriptConfigurator : IEntityTypeConfiguration<RuleScript>
 
         builder.Property(x => x.Id).HasColumnName(IdColumn).IsRequired().ValueGeneratedOnAdd();
         builder.Property(x => x.SourceId).HasColumnName(SourceIdColumn).IsRequired();
-        builder.Property(x => x.ProcessScriptId).HasColumnName(ProcessScriptIdColumn).IsRequired();
+        builder.Property(x => x.ProcessScriptId).HasColumnName(ProcessScriptIdColumn);
         builder.Property(x => x.Priority).HasColumnName(PriorityColumn).IsRequired();
         builder.Property(x => x.Prefilter).HasColumnName(PrefilterColumn).IsRequired();
         builder.Property(x => x.Enabled).HasColumnName(EnabledColumn).IsRequired();

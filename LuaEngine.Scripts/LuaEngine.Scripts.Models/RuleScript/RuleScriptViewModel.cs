@@ -1,9 +1,11 @@
-﻿namespace LuaEngine.Scripts.Models.Rule;
+﻿using LuaEngine.Scripts.Models.ProcessScript;
+
+namespace LuaEngine.Scripts.Models.RuleScript;
 
 /// <summary>
-/// Представление обновления скрипта-правила.
+/// Представление скрипта-правила.
 /// </summary>
-public class RuleScriptPutViewModel
+public class RuleScriptViewModel
 {
     /// <summary>
     /// Идентификатор.
@@ -19,6 +21,7 @@ public class RuleScriptPutViewModel
     /// Идентификатор скрипта-обработчика.
     /// </summary>
     public Guid? ProcessScriptId { get; set; }
+    public ProcessScriptViewModel? ProcessScript { get; set; }
 
     /// <summary>
     /// Приоритет.

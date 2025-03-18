@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Monq.Core.Paging.Models;
 using LuaEngine.Scripts.Models.ScriptVersion;
 using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
+using LuaEngine.Scripts.WebApi.Models.IncludeOptions;
 
 namespace LuaEngine.Scripts.WebApi.Controllers;
 
@@ -30,18 +31,21 @@ public class ScriptVersionController : Controller
     /// Получить коллекцию версий скриптов.
     /// </summary>
     /// <param name="pagingModel">Модель постраничной разбивки.</param>
+    /// <param name="includeViewModel">Опции включения сущностей.</param>
     /// <param name="filterViewModel">Фильтр.</param>
     /// <param name="token">Токен отмены.</param>
     /// <returns>Коллекция версий скриптов.</returns>
     [HttpPost("filter")]
     public async Task<ActionResult<IEnumerable<ScriptVersionViewModel>>> GetAllAsync(
         [FromQuery] PagingModel pagingModel,
+        [FromQuery] ScriptVersionIncludeViewModel includeViewModel,
         [FromBody] ScriptVersionFilterViewModel filterViewModel,
         CancellationToken token)
     {
         var filter = _mapper.Map<ScriptVersionFilter>(filterViewModel);
+        var includeOptions = _mapper.Map<ScriptVersionIncludeOptions>(includeViewModel);
 
-        var scripts = await _ruleScriptService.GetAllAsync(pagingModel, filter, token);
+        var scripts = await _ruleScriptService.GetAllAsync(pagingModel, includeOptions, filter, token);
 
         var scriptViewModels = _mapper.Map<IEnumerable<ScriptVersionViewModel>>(scripts);
 
@@ -52,12 +56,18 @@ public class ScriptVersionController : Controller
     /// Получить версию скрипта по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор скрипта.</param>
+    /// <param name="includeViewModel">Опции включения сущностей.</param>
     /// <param name="token">Токен отмены.</param>
     /// <returns>Скрипт-правило.</returns>
     [HttpGet("{id}")]
-    public async Task<ActionResult<ScriptVersionViewModel?>> GetAsync([FromRoute] Guid id, CancellationToken token)
+    public async Task<ActionResult<ScriptVersionViewModel?>> GetAsync(
+        [FromRoute] Guid id,
+        [FromQuery] ScriptVersionIncludeViewModel includeViewModel,
+        CancellationToken token)
     {
-        var script = await _ruleScriptService.GetAsync(id, token);
+        var includeOptions = _mapper.Map<ScriptVersionIncludeOptions>(includeViewModel);
+
+        var script = await _ruleScriptService.GetAsync(id, includeOptions, token);
 
         var scriptViewModel = _mapper.Map<ScriptVersionViewModel>(script);
 

@@ -4,8 +4,8 @@ using Monq.Core.Paging.Models;
 using LuaEngine.Scripts.WebApi.Models;
 using LuaEngine.Scripts.WebApi.Models.Filters;
 using LuaEngine.Scripts.WebApi.Services.Abstracts;
-using LuaEngine.Scripts.Models.Script;
 using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
+using LuaEngine.Scripts.Models.ProcessScript;
 
 namespace LuaEngine.Scripts.WebApi.Controllers;
 

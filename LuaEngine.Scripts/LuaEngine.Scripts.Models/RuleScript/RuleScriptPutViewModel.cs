@@ -1,17 +1,10 @@
-﻿using LuaEngine.Scripts.Models.Script;
-
-namespace LuaEngine.Scripts.Models.Rule;
+﻿namespace LuaEngine.Scripts.Models.RuleScript;
 
 /// <summary>
-/// Представление скрипта-правила.
+/// Представление обновления скрипта-правила.
 /// </summary>
-public class RuleScriptViewModel
+public class RuleScriptPutViewModel
 {
-    /// <summary>
-    /// Идентификатор.
-    /// </summary>
-    public Guid Id { get; set; }
-
     /// <summary>
     /// Идентификатор источника.
     /// </summary>
@@ -21,7 +14,6 @@ public class RuleScriptViewModel
     /// Идентификатор скрипта-обработчика.
     /// </summary>
     public Guid? ProcessScriptId { get; set; }
-    public ProcessScriptViewModel? ProcessScript { get; set; }
 
     /// <summary>
     /// Приоритет.

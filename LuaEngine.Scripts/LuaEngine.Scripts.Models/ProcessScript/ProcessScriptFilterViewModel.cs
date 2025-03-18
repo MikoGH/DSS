@@ -1,4 +1,4 @@
-﻿namespace LuaEngine.Scripts.Models.Script;
+﻿namespace LuaEngine.Scripts.Models.ProcessScript;
 
 /// <summary>
 /// Представление фильтрации скриптов-обработчиков.

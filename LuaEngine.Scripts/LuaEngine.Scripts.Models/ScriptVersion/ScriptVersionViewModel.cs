@@ -1,6 +1,6 @@
 ﻿using LuaEngine.Scripts.Models.Enums;
-using LuaEngine.Scripts.Models.Rule;
-using LuaEngine.Scripts.Models.Script;
+using LuaEngine.Scripts.Models.ProcessScript;
+using LuaEngine.Scripts.Models.RuleScript;
 
 namespace LuaEngine.Scripts.Models.ScriptVersion;
 

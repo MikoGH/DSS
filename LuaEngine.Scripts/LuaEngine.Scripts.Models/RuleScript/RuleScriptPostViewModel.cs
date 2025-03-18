@@ -1,4 +1,4 @@
-﻿namespace LuaEngine.Scripts.Models.Rule;
+﻿namespace LuaEngine.Scripts.Models.RuleScript;
 
 /// <summary>
 /// Представление добавления скрипта-правила.

@@ -18,7 +18,8 @@ public class RuleScript
     /// <summary>
     /// Идентификатор скрипта-обработчика.
     /// </summary>
-    public Guid ProcessScriptId { get; set; }
+    public Guid? ProcessScriptId { get; set; }
+    public ProcessScript? ProcessScript { get; set; }
 
     /// <summary>
     /// Приоритет.

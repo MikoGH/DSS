@@ -3,6 +3,7 @@ using System;
 using LuaEngine.Scripts.WebApi.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LuaEngine.Scripts.WebApi.Migrations
 {
     [DbContext(typeof(ScriptsContext))]
-    partial class ScriptsContextModelSnapshot : ModelSnapshot
+    [Migration("20250317175045_m004_ChangeRuleScriptRelationWithProcessScript")]
+    partial class m004_ChangeRuleScriptRelationWithProcessScript
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

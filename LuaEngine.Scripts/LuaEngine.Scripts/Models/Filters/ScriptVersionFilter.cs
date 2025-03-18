@@ -24,19 +24,19 @@ public class ScriptVersionFilter
     /// Идентификатор скриптов-обработчиков.
     /// </summary>
     [FilteredBy(nameof(ScriptVersion.ProcessScriptId))]
-    public IEnumerable<Guid>? ProcessScriptIds { get; set; }
+    public IEnumerable<Guid?>? ProcessScriptIds { get; set; }
 
     /// <summary>
     /// Идентификаторы скриптов-правил.
     /// </summary>
     [FilteredBy(nameof(ScriptVersion.RuleScriptId))]
-    public IEnumerable<Guid>? RuleScriptId { get; set; }
+    public IEnumerable<Guid?>? RuleScriptId { get; set; }
 
     /// <summary>
     /// Идентификаторы родительских версий скриптов.
     /// </summary>
     [FilteredBy(nameof(ScriptVersion.ParentId))]
-    public IEnumerable<Guid>? ParentIds { get; set; }
+    public IEnumerable<Guid?>? ParentIds { get; set; }
 
     /// <summary>
     /// Версии.
@@ -49,4 +49,22 @@ public class ScriptVersionFilter
     /// </summary>
     [FilteredBy(nameof(ScriptVersion.Status))]
     public IEnumerable<Status>? Status { get; set; }
+
+    /// <summary>
+    /// Идентификаторы источников.
+    /// </summary>
+    [FilteredBy(nameof(ScriptVersion.RuleScript), nameof(RuleScript.SourceId))]
+    public IEnumerable<Guid>? SourceIds { get; set; }
+
+    /// <summary>
+    /// Является префильтром.
+    /// </summary>
+    [FilteredBy(nameof(ScriptVersion.RuleScript), nameof(RuleScript.Prefilter))]
+    public IEnumerable<bool>? Prefilter { get; set; }
+
+    /// <summary>
+    /// Активно.
+    /// </summary>
+    [FilteredBy(nameof(ScriptVersion.RuleScript), nameof(RuleScript.Enabled))]
+    public IEnumerable<bool>? Enabled { get; set; }
 }

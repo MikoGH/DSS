@@ -7,6 +7,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddServices(builder.Configuration);
+    builder.Services.AddAutomatonServices(builder.Configuration);
     builder.Services.AddRabbitMq(builder.Configuration, typeof(Program).Assembly);
     builder.Services.AddCors();
     builder.Services.AddControllers()

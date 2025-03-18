@@ -41,4 +41,19 @@ public class ScriptVersionFilterViewModel
     /// Статусы.
     /// </summary>
     public IEnumerable<Status>? Status { get; set; }
+
+    /// <summary>
+    /// Идентификаторы источников.
+    /// </summary>
+    public IEnumerable<Guid>? SourceIds { get; set; }
+
+    /// <summary>
+    /// Является префильтром.
+    /// </summary>
+    public IEnumerable<bool>? Prefilter { get; set; }
+
+    /// <summary>
+    /// Активно.
+    /// </summary>
+    public IEnumerable<bool>? Enabled { get; set; }
 }

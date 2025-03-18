@@ -21,6 +21,11 @@ public class AppConstants
     public const string RabbitMqSectionName = "RabbitMq";
 
     /// <summary>
+    /// Название секции движка автоматона.
+    /// </summary>
+    public const string AutomatonSectionName = "AutomatonEngine";
+
+    /// <summary>
     /// Название секции в appsettings откуда брать название очереди исходных данных.
     /// </summary>
     public const string RawDataQueueNameSection = "Queues:RawDataQueue";

@@ -3,6 +3,7 @@ using LuaEngine.Scripts.WebApi.Models;
 using LuaEngine.Scripts.WebApi.Repositories.Abstracts;
 using LuaEngine.Scripts.WebApi.Services.Abstracts;
 using Monq.Core.Paging.Models;
+using LuaEngine.Scripts.WebApi.Models.IncludeOptions;
 
 namespace LuaEngine.Scripts.WebApi.Services;
 
@@ -19,17 +20,17 @@ public class ScriptVersionService : IScriptVersionService
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<ScriptVersion>> GetAllAsync(PagingModel pagingModel, ScriptVersionFilter filter, CancellationToken token)
+    public async Task<IEnumerable<ScriptVersion>> GetAllAsync(PagingModel pagingModel, ScriptVersionIncludeOptions includeOptions, ScriptVersionFilter filter, CancellationToken token)
     {
-        var scripts = await _scriptVersionRepository.GetAllAsync(pagingModel, filter, token);
+        var scripts = await _scriptVersionRepository.GetAllAsync(pagingModel, includeOptions, filter, token);
 
         return scripts;
     }
 
     /// <inheritdoc/>
-    public async Task<ScriptVersion?> GetAsync(Guid id, CancellationToken token)
+    public async Task<ScriptVersion?> GetAsync(Guid id, ScriptVersionIncludeOptions includeOptions, CancellationToken token)
     {
-        var script = await _scriptVersionRepository.GetAsync(id, token);
+        var script = await _scriptVersionRepository.GetAsync(id, includeOptions, token);
 
         return script;
     }

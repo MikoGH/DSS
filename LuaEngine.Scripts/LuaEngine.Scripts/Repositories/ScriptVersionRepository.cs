@@ -7,6 +7,7 @@ using Monq.Core.Paging.Models;
 using Microsoft.EntityFrameworkCore;
 using Monq.Core.MvcExtensions.Extensions;
 using Monq.Core.Paging.Extensions;
+using LuaEngine.Scripts.WebApi.Models.IncludeOptions;
 
 namespace LuaEngine.Scripts.WebApi.Repositories;
 
@@ -24,11 +25,26 @@ public class ScriptVersionRepository : IScriptVersionRepository
         _mapper = mapper;
     }
 
-    /// <inheritdoc/>
-    public async Task<IEnumerable<ScriptVersion>> GetAllAsync(PagingModel pagingModel, ScriptVersionFilter filter, CancellationToken token)
+    private IQueryable<ScriptVersion> GetQuery(ScriptVersionIncludeOptions includeOptions)
     {
-        var scripts = await _context.ScriptVersions
-            .AsNoTracking()
+        var query = _context.ScriptVersions.AsNoTracking();
+
+        if (includeOptions.IncludeProcessScript)
+            query = query.Include(x => x.ProcessScript);
+
+        if (includeOptions.IncludeRuleScript)
+            query = query.Include(x => x.RuleScript);
+
+        if (includeOptions.IncludeParentScriptVersion)
+            query = query.Include(x => x.Parent);
+
+        return query;
+    }
+
+    /// <inheritdoc/>
+    public async Task<IEnumerable<ScriptVersion>> GetAllAsync(PagingModel pagingModel, ScriptVersionIncludeOptions includeOptions, ScriptVersionFilter filter, CancellationToken token)
+    {
+        var scripts = await GetQuery(includeOptions)
             .FilterBy(filter)
             .WithPaging(pagingModel, null, x => x.Id)
             .ToListAsync(token);
@@ -37,10 +53,9 @@ public class ScriptVersionRepository : IScriptVersionRepository
     }
 
     /// <inheritdoc/>
-    public async Task<ScriptVersion?> GetAsync(Guid id, CancellationToken token)
+    public async Task<ScriptVersion?> GetAsync(Guid id, ScriptVersionIncludeOptions includeOptions, CancellationToken token)
     {
-        var script = await _context.ScriptVersions
-            .AsNoTracking()
+        var script = await GetQuery(includeOptions)
             .FirstOrDefaultAsync(x => x.Id == id, token);
 
         return script;

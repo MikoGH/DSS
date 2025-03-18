@@ -23,7 +23,7 @@ public class RuleScriptFilter
     /// Идентификаторы скриптов-обработчиков.
     /// </summary>
     [FilteredBy(nameof(RuleScript.ProcessScriptId))]
-    public IEnumerable<Guid>? ProcessScriptIds { get; set; }
+    public IEnumerable<Guid?>? ProcessScriptIds { get; set; }
 
     /// <summary>
     /// Приоритеты.
