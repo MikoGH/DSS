@@ -138,3 +138,5 @@ _NCrunch*
 .vs/
 
 appsettings.Development.json
+
+LuaEngine.Automaton/

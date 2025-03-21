@@ -8,12 +8,12 @@ public class AppConstants
     /// <summary>
     /// Название приложения в Swagger.
     /// </summary>
-    public const string SwaggerApiName = "LuaEngine API";
+    public const string SwaggerApiName = "Orchestrator API";
 
     /// <summary>
     /// Префикс пути.
     /// </summary>
-    public const string RoutePrefix = "lua-engine-api";
+    public const string RoutePrefix = "orchestrator-api";
 
     /// <summary>
     /// Название секции RabbitMQ.
@@ -35,4 +35,8 @@ public class AppConstants
     /// </summary>
     public const string Queue = "queue:";
 
+    /// <summary>
+    /// Путь для хаба.
+    /// </summary>
+    public const string HubPath = "/hub";
 }

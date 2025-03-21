@@ -14,4 +14,9 @@ public class AppConstants
     /// Префикс пути.
     /// </summary>
     public const string RoutePrefix = "lua-agent-api";
+
+    /// <summary>
+    /// Название секции движка автоматона.
+    /// </summary>
+    public const string AutomatonSectionName = "AutomatonEngine";
 }

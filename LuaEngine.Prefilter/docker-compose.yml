@@ -22,6 +22,17 @@ services:
     container_name: orchestrator_api
     depends_on:
       - rabbitmq
+  agent_api:
+    image: mlkod/lua-engine:agent_api
+    build:
+      context: ../LuaEngine.LuaAgent
+      dockerfile: LuaEngine.LuaAgent/Dockerfile
+    ports:
+      - "8086:8086"
+      # - "8087:8087"
+    container_name: agent_api
+    depends_on:
+      - orchestrator_api
   scripts_api:
     image: mlkod/lua-engine:scripts_api
     build:

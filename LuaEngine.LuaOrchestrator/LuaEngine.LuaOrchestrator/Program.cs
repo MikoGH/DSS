@@ -1,6 +1,8 @@
 using LuaEngine.LuaOrchestrator.Extensions;
+using LuaEngine.LuaOrchestrator.Hubs;
 using LuaEngine.LuaOrchestrator.Middlewares;
 using System.Text.Json;
+using static LuaEngine.LuaOrchestrator.Constants.AppConstants;
 
 try
 {
@@ -20,6 +22,7 @@ try
     builder.Services.AddLuaEngineSwagger();
     builder.Services.AddRabbitMq(builder.Configuration, typeof(Program).Assembly);
     builder.Services.AddServices();
+    builder.Services.AddSignalR();
 
     var app = builder.Build();
 
@@ -30,6 +33,7 @@ try
         .AllowAnyOrigin());
     app.UseRouting();
     app.MapControllers();
+    app.MapHub<OrchestratorHub>(HubPath);
     app.UseMiddleware<ExceptionMiddleware>();
 
     app.Run();

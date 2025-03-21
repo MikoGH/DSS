@@ -1,4 +1,6 @@
-﻿namespace LuaEngine.LuaOrchestrator.Extensions;
+﻿using LuaEngine.LuaOrchestrator.Hubs;
+
+namespace LuaEngine.LuaOrchestrator.Extensions;
 
 /// <summary>
 /// Методы расширений коллекции дескрипторов служб.
@@ -12,6 +14,8 @@ public static class ServicesExtensions
     /// <returns>Коллекция дескрипторов служб.</returns>
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
+        services.AddSingleton<OrchestratorHub>();
+
         return services;
     }
 }

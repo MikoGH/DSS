@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaEngine.LuaAgent", "LuaEngine.LuaAgent\LuaEngine.LuaAgent.csproj", "{3E32F030-BF4A-43E0-A4DC-440A683583CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaEngine.Automaton", "LuaEngine.Automaton\LuaEngine.Automaton.csproj", "{2DA8238D-E229-4362-9FB4-D6C6A506D278}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3E32F030-BF4A-43E0-A4DC-440A683583CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E32F030-BF4A-43E0-A4DC-440A683583CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E32F030-BF4A-43E0-A4DC-440A683583CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DA8238D-E229-4362-9FB4-D6C6A506D278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DA8238D-E229-4362-9FB4-D6C6A506D278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DA8238D-E229-4362-9FB4-D6C6A506D278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DA8238D-E229-4362-9FB4-D6C6A506D278}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

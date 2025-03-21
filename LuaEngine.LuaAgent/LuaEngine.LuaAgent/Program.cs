@@ -17,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddLuaEngineSwagger();
 builder.Services.AddServices();
+builder.Services.AddAutomatonServices(builder.Configuration);
 
 var app = builder.Build();
 

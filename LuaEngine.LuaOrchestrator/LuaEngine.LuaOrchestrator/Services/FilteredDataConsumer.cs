@@ -1,4 +1,5 @@
-﻿using LuaEngine.LuaOrchestrator.Models;
+﻿using LuaEngine.LuaOrchestrator.Hubs;
+using LuaEngine.LuaOrchestrator.Models;
 using MassTransit;
 
 namespace LuaEngine.LuaOrchestrator.Services;
@@ -9,19 +10,21 @@ namespace LuaEngine.LuaOrchestrator.Services;
 public class FilteredDataConsumer : IConsumer<FilteredData>
 {
     private readonly ILogger<FilteredDataConsumer> _logger;
+    private readonly OrchestratorHub _hub;
 
-    public FilteredDataConsumer(ILogger<FilteredDataConsumer> logger)
+    public FilteredDataConsumer(ILogger<FilteredDataConsumer> logger, OrchestratorHub hub)
     {
         _logger = logger;
+        _hub = hub;
     }
 
     /// <summary>
     /// Обработать сообщение.
     /// </summary>
-    public Task Consume(ConsumeContext<FilteredData> context)
+    public async Task Consume(ConsumeContext<FilteredData> context)
     {
         _logger.LogInformation($"Сообщение доставлено! Тело сообщения: {context.Message.Body}.");
 
-        return Task.CompletedTask;
+        await _hub.Send(context.Message.Script, context.Message.Body);
     }
 }
