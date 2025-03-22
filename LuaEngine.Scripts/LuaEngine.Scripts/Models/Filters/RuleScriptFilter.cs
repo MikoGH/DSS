@@ -23,19 +23,13 @@ public class RuleScriptFilter
     /// Идентификаторы скриптов-обработчиков.
     /// </summary>
     [FilteredBy(nameof(RuleScript.ProcessScriptId))]
-    public IEnumerable<Guid?>? ProcessScriptIds { get; set; }
+    public IEnumerable<Guid>? ProcessScriptIds { get; set; }
 
     /// <summary>
     /// Приоритеты.
     /// </summary>
     [FilteredBy(nameof(RuleScript.Priority))]
     public IEnumerable<int>? Priorities { get; set; }
-
-    /// <summary>
-    /// Является префильтром.
-    /// </summary>
-    [FilteredBy(nameof(RuleScript.Prefilter))]
-    public IEnumerable<bool>? Prefilter { get; set; }
 
     /// <summary>
     /// Активно.

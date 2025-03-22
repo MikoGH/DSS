@@ -20,18 +20,13 @@ public class RuleScriptViewModel
     /// <summary>
     /// Идентификатор скрипта-обработчика.
     /// </summary>
-    public Guid? ProcessScriptId { get; set; }
+    public Guid ProcessScriptId { get; set; }
     public ProcessScriptViewModel? ProcessScript { get; set; }
 
     /// <summary>
     /// Приоритет.
     /// </summary>
     public int Priority { get; set; }
-
-    /// <summary>
-    /// Является префильтром.
-    /// </summary>
-    public bool Prefilter { get; set; }
 
     /// <summary>
     /// Активно.

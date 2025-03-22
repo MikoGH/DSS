@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LuaEngine.Scripts.WebApi.Migrations
 {
     [DbContext(typeof(ScriptsContext))]
-    [Migration("20250215104207_m002_RenameEntities")]
-    partial class m002_RenameEntities
+    [Migration("20250322161425_m001_Initial")]
+    partial class m001_Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,28 @@ namespace LuaEngine.Scripts.WebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("LuaEngine.Scripts.WebApi.Models.PrefilterScript", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
+
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceId");
+
+                    b.ToTable("prefilter_scripts", (string)null);
+                });
 
             modelBuilder.Entity("LuaEngine.Scripts.WebApi.Models.ProcessScript", b =>
                 {
@@ -65,10 +87,6 @@ namespace LuaEngine.Scripts.WebApi.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("enabled");
 
-                    b.Property<bool>("Prefilter")
-                        .HasColumnType("boolean")
-                        .HasColumnName("prefilter");
-
                     b.Property<int>("Priority")
                         .HasColumnType("integer")
                         .HasColumnName("priority");
@@ -82,6 +100,8 @@ namespace LuaEngine.Scripts.WebApi.Migrations
                         .HasColumnName("source_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProcessScriptId");
 
                     b.HasIndex("SourceId");
 
@@ -103,6 +123,9 @@ namespace LuaEngine.Scripts.WebApi.Migrations
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid")
                         .HasColumnName("parent_id");
+
+                    b.Property<Guid?>("PrefilterScriptId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ProcessScriptId")
                         .HasColumnType("uuid")
@@ -128,6 +151,8 @@ namespace LuaEngine.Scripts.WebApi.Migrations
 
                     b.HasIndex("ParentId");
 
+                    b.HasIndex("PrefilterScriptId");
+
                     b.HasIndex("ProcessScriptId");
 
                     b.HasIndex("RuleScriptId");
@@ -137,11 +162,26 @@ namespace LuaEngine.Scripts.WebApi.Migrations
                     b.ToTable("script_versions", (string)null);
                 });
 
+            modelBuilder.Entity("LuaEngine.Scripts.WebApi.Models.RuleScript", b =>
+                {
+                    b.HasOne("LuaEngine.Scripts.WebApi.Models.ProcessScript", "ProcessScript")
+                        .WithMany()
+                        .HasForeignKey("ProcessScriptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProcessScript");
+                });
+
             modelBuilder.Entity("LuaEngine.Scripts.WebApi.Models.ScriptVersion", b =>
                 {
                     b.HasOne("LuaEngine.Scripts.WebApi.Models.ScriptVersion", "Parent")
                         .WithMany()
                         .HasForeignKey("ParentId");
+
+                    b.HasOne("LuaEngine.Scripts.WebApi.Models.PrefilterScript", "PrefilterScript")
+                        .WithMany()
+                        .HasForeignKey("PrefilterScriptId");
 
                     b.HasOne("LuaEngine.Scripts.WebApi.Models.ProcessScript", "ProcessScript")
                         .WithMany()
@@ -152,6 +192,8 @@ namespace LuaEngine.Scripts.WebApi.Migrations
                         .HasForeignKey("RuleScriptId");
 
                     b.Navigation("Parent");
+
+                    b.Navigation("PrefilterScript");
 
                     b.Navigation("ProcessScript");
 

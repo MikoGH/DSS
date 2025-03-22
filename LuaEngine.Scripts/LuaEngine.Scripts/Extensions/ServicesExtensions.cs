@@ -17,9 +17,10 @@ public static class ServicesExtensions
     /// <returns>Коллекция дескрипторов служб.</returns>
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddTransient<IScriptVersionService, ScriptVersionService>();
-        services.AddTransient<IProcessScriptService, ProcessScriptService>();
+        services.AddTransient<IPrefilterScriptService, PrefilterScriptService>();
         services.AddTransient<IRuleScriptService, RuleScriptService>();
+        services.AddTransient<IProcessScriptService, ProcessScriptService>();
+        services.AddTransient<IScriptVersionService, ScriptVersionService>();
         services.AddTransient<IScriptValidator, ScriptValidator>();
 
         return services;
@@ -32,9 +33,10 @@ public static class ServicesExtensions
     /// <returns>Коллекция дескрипторов служб.</returns>
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddTransient<IScriptVersionRepository, ScriptVersionRepository>();
-        services.AddTransient<IProcessScriptRepository, ProcessScriptRepository>();
+        services.AddTransient<IPrefilterScriptRepository, PrefilterScriptRepository>();
         services.AddTransient<IRuleScriptRepository, RuleScriptRepository>();
+        services.AddTransient<IProcessScriptRepository, ProcessScriptRepository>();
+        services.AddTransient<IScriptVersionRepository, ScriptVersionRepository>();
 
         return services;
     }

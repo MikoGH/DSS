@@ -5,18 +5,16 @@ using static LuaEngine.Scripts.WebApi.Constants.DbConstants;
 
 namespace LuaEngine.Scripts.WebApi.Database.Configurators;
 
-public class RuleScriptConfigurator : IEntityTypeConfiguration<RuleScript>
+public class PrefilterScriptConfigurator : IEntityTypeConfiguration<PrefilterScript>
 {
-    public void Configure(EntityTypeBuilder<RuleScript> builder)
+    public void Configure(EntityTypeBuilder<PrefilterScript> builder)
     {
-        builder.ToTable(RuleScriptTableName);
+        builder.ToTable(PrefilterScriptTableName);
 
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).HasColumnName(IdColumn).IsRequired().ValueGeneratedOnAdd();
         builder.Property(x => x.SourceId).HasColumnName(SourceIdColumn).IsRequired();
-        builder.Property(x => x.ProcessScriptId).HasColumnName(ProcessScriptIdColumn).IsRequired();
-        builder.Property(x => x.Priority).HasColumnName(PriorityColumn).IsRequired();
         builder.Property(x => x.Enabled).HasColumnName(EnabledColumn).IsRequired();
 
         builder.HasIndex(x => x.SourceId);

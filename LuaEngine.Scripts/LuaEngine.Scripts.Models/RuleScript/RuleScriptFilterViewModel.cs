@@ -26,11 +26,6 @@ public class RuleScriptFilterViewModel
     public IEnumerable<int>? Priorities { get; set; }
 
     /// <summary>
-    /// Является префильтром.
-    /// </summary>
-    public IEnumerable<bool>? Prefilter { get; set; }
-
-    /// <summary>
     /// Активно.
     /// </summary>
     public IEnumerable<bool>? Enabled { get; set; }

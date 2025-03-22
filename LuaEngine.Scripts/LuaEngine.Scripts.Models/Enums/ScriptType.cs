@@ -13,5 +13,10 @@ public enum ScriptType : byte
     /// <summary>
     /// Скрипт-правило.
     /// </summary>
-    Rule = 1
+    Rule = 1,
+
+    /// <summary>
+    /// Скрипт-префильтр.
+    /// </summary>
+    Prefilter = 2
 }

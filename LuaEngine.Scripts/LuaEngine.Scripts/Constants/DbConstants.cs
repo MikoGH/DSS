@@ -6,14 +6,19 @@
 public static class DbConstants
 {
     /// <summary>
-    /// Название таблицы скриптов-обработчиков.
+    /// Название таблицы скриптов-префильтров.
     /// </summary>
-    public const string ProcessScriptTableName = "process_scripts";
+    public const string PrefilterScriptTableName = "prefilter_scripts";
 
     /// <summary>
     /// Название таблицы скриптов-правил.
     /// </summary>
     public const string RuleScriptTableName = "rule_scripts";
+
+    /// <summary>
+    /// Название таблицы скриптов-обработчиков.
+    /// </summary>
+    public const string ProcessScriptTableName = "process_scripts";
 
     /// <summary>
     /// Название таблицы версий скриптов.

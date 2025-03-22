@@ -13,14 +13,19 @@ public class ScriptVersionPostViewModel
     public ScriptType Type { get; set; }
 
     /// <summary>
-    /// Идентификатор скрипта-обработчика.
+    /// Идентификатор скрипта-префильтра.
     /// </summary>
-    public Guid? ProcessScriptId { get; set; }
+    public Guid? PrefilterScriptId { get; set; }
 
     /// <summary>
     /// Идентификатор скрипта-правила.
     /// </summary>
     public Guid? RuleScriptId { get; set; }
+
+    /// <summary>
+    /// Идентификатор скрипта-обработчика.
+    /// </summary>
+    public Guid? ProcessScriptId { get; set; }
 
     /// <summary>
     /// Идентификатор родительской версии скрипта.

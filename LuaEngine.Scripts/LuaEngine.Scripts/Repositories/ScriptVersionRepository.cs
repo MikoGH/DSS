@@ -29,11 +29,14 @@ public class ScriptVersionRepository : IScriptVersionRepository
     {
         var query = _context.ScriptVersions.AsNoTracking();
 
-        if (includeOptions.IncludeProcessScript)
-            query = query.Include(x => x.ProcessScript);
+        if (includeOptions.IncludePrefilterScript)
+            query = query.Include(x => x.PrefilterScript);
 
         if (includeOptions.IncludeRuleScript)
             query = query.Include(x => x.RuleScript);
+
+        if (includeOptions.IncludeProcessScript)
+            query = query.Include(x => x.ProcessScript);
 
         if (includeOptions.IncludeParentScriptVersion)
             query = query.Include(x => x.Parent);

@@ -6,6 +6,11 @@
 public class ScriptVersionIncludeViewModel
 {
     /// <summary>
+    /// Включить скрипт-префильтр.
+    /// </summary>
+    public bool IncludePrefilterScript { get; set; }
+
+    /// <summary>
     /// Включить скрипт-правило.
     /// </summary>
     public bool IncludeRuleScript { get; set; }

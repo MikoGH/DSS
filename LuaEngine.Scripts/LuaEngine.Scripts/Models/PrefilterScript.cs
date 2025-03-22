@@ -1,9 +1,9 @@
 ﻿namespace LuaEngine.Scripts.WebApi.Models;
 
 /// <summary>
-/// Скрипт-правило.
+/// Скрипт-префильтр.
 /// </summary>
-public class RuleScript
+public class PrefilterScript
 {
     /// <summary>
     /// Идентификатор.
@@ -14,17 +14,6 @@ public class RuleScript
     /// Идентификатор источника.
     /// </summary>
     public Guid SourceId { get; set; }
-
-    /// <summary>
-    /// Идентификатор скрипта-обработчика.
-    /// </summary>
-    public Guid ProcessScriptId { get; set; }
-    public ProcessScript? ProcessScript { get; set; }
-
-    /// <summary>
-    /// Приоритет.
-    /// </summary>
-    public int Priority { get; set; }
 
     /// <summary>
     /// Активно.
