@@ -77,6 +77,11 @@ public static class DbConstants
     public const string CodeColumn = "code";
 
     /// <summary>
+    /// Столбец Идентификатор скрипта-префильтра.
+    /// </summary>
+    public const string PrefilterScriptIdColumn = "prefilter_script_id";
+
+    /// <summary>
     /// Столбец Идентификатор скрипта-правила.
     /// </summary>
     public const string RuleScriptIdColumn = "rule_script_id";

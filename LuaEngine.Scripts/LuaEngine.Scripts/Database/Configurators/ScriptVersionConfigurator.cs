@@ -15,8 +15,9 @@ public class ScriptVersionConfigurator : IEntityTypeConfiguration<ScriptVersion>
 
         builder.Property(x => x.Id).HasColumnName(IdColumn).IsRequired().ValueGeneratedOnAdd();
         builder.Property(x => x.Type).HasColumnName(TypeColumn).IsRequired();
-        builder.Property(x => x.ProcessScriptId).HasColumnName(ProcessScriptIdColumn);
+        builder.Property(x => x.PrefilterScriptId).HasColumnName(PrefilterScriptIdColumn);
         builder.Property(x => x.RuleScriptId).HasColumnName(RuleScriptIdColumn);
+        builder.Property(x => x.ProcessScriptId).HasColumnName(ProcessScriptIdColumn);
         builder.Property(x => x.ParentId).HasColumnName(ParentIdColumn);
         builder.Property(x => x.Code).HasColumnName(CodeColumn);
         builder.Property(x => x.Version).HasColumnName(VersionColumn);
