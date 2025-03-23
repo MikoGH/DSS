@@ -1,6 +1,6 @@
 ﻿using LuaEngine.Prefilter.Repositories.Abstractions;
 using LuaEngine.Prefilter.Repositories.Abstractions.RefitClients;
-using LuaEngine.Scripts.Models.Script;
+using LuaEngine.Scripts.Models.ProcessScript;
 using Monq.Core.Paging.Models;
 using System.Net;
 

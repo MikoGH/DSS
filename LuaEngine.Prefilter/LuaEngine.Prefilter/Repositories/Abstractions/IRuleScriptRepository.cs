@@ -1,4 +1,4 @@
-﻿using LuaEngine.Scripts.Models.Rule;
+﻿using LuaEngine.Scripts.Models.RuleScript;
 using Monq.Core.Paging.Models;
 
 namespace LuaEngine.Prefilter.Repositories.Abstractions;

@@ -3,15 +3,13 @@ using LuaEngine.Automaton.Runner;
 using LuaEngine.LuaOrchestrator.Models;
 using LuaEngine.Prefilter.Models;
 using LuaEngine.Prefilter.Repositories.Abstractions;
-using LuaEngine.Scripts.Models.Rule;
 using LuaEngine.Scripts.Models.ScriptVersion;
 using MassTransit;
 using Monq.Core.Paging.Models;
 using System.Text.Json;
 using LuaEngine.Scripts.Models.Enums;
 using LuaEngine.Automaton.Models.Enums;
-using NLua;
-using Polly;
+using LuaEngine.Scripts.Models.RuleScript;
 
 namespace LuaEngine.Prefilter.Services;
 
@@ -46,29 +44,30 @@ public class DataConsumer : IConsumer<RawData>
         JsonElement deserializedBody = JsonSerializer.Deserialize<JsonElement>(context.Message.Body);
         var variables = (Dictionary<string, object?>)ConvertJsonElementValue(deserializedBody);
 
-        // получение активных префильтра и правил для источника
+        // получение активного префильтра для источника
+        var prefilterScriptVersion = await GetPrefilterScriptVersion(context.Message.SourceId);
+
+        // получение активных правил для источника
         var ruleScriptVersions = await GetRuleScriptVersions(context.Message.SourceId);
 
         _logger.LogInformation($"Версий скриптов-правил получено: {ruleScriptVersions.Count()}.");
 
-        var prefilter = ruleScriptVersions.FirstOrDefault(x => x.RuleScript.Prefilter);
-        var ruleScripts = ruleScriptVersions
-            .Where(x => !x.RuleScript.Prefilter)
+        var orderedRuleScriptVersions = ruleScriptVersions
             .OrderBy(x => x.RuleScript.Priority)
             .ToList();
 
         // префильтр
-        var prefilterResult = await ExecutePrefilter(prefilter, context.Message.SourceId, variables);
+        var prefilterResult = await ExecutePrefilter(prefilterScriptVersion, context.Message.SourceId, variables);
         if (!prefilterResult)
             return;
 
         // правила
-        var ruleScript = await ExecuteRuleScripts(ruleScripts, context.Message.SourceId, variables);
-        if (ruleScript is null)
+        var ruleScriptVersion = await ExecuteRuleScripts(orderedRuleScriptVersions, context.Message.SourceId, variables);
+        if (ruleScriptVersion is null)
             return;
 
         // получение скрипта-обработчика
-        var processScript = await GetProcessScriptVersion(ruleScript.RuleScript);
+        var processScript = await GetProcessScriptVersion(ruleScriptVersion.RuleScript);
         if (processScript is null)
             return;
 
@@ -83,6 +82,25 @@ public class DataConsumer : IConsumer<RawData>
         _logger.LogInformation($"Сообщение отправлено в очередь! Тело сообщения: {filteredData.Body}.");
     }
 
+    private async Task<ScriptVersionViewModel?> GetPrefilterScriptVersion(Guid sourceId)
+    {
+        var scriptVersionFilter = new ScriptVersionFilterViewModel()
+        {
+            Types = [ScriptType.Prefilter],
+            SourceIds = [sourceId],
+            Enabled = [true],
+            Statuses = [Status.Executable]
+        };
+        var scriptVersionIncludeOptions = new ScriptVersionIncludeViewModel()
+        {
+            IncludePrefilterScript = true
+        };
+
+        var scriptVersions = await _scriptVersionRepository.GetAllAsync(new PagingModel(), scriptVersionIncludeOptions, scriptVersionFilter, CancellationToken.None);
+
+        return scriptVersions.FirstOrDefault();
+    }
+
     private Task<IEnumerable<ScriptVersionViewModel>> GetRuleScriptVersions(Guid sourceId)
     {
         var scriptVersionFilter = new ScriptVersionFilterViewModel()
@@ -90,7 +108,7 @@ public class DataConsumer : IConsumer<RawData>
             Types = [ScriptType.Rule],
             SourceIds = [sourceId],
             Enabled = [true],
-            Status = [Status.Executable]
+            Statuses = [Status.Executable]
         };
         var scriptVersionIncludeOptions = new ScriptVersionIncludeViewModel()
         {
@@ -105,7 +123,7 @@ public class DataConsumer : IConsumer<RawData>
         var scriptVersionFilter = new ScriptVersionFilterViewModel()
         {
             ProcessScriptIds = [(Guid)ruleScript.ProcessScriptId],
-            Status = [Status.Executable]
+            Statuses = [Status.Executable]
         };
         var scriptVersionIncludeOptions = new ScriptVersionIncludeViewModel();
 
@@ -199,12 +217,6 @@ public class DataConsumer : IConsumer<RawData>
             var ruleScriptResult = (bool)engineResult.Value;
 
             _logger.LogInformation($"Правило для источника {sourceId} выполнилось успешно. Результат выполнения скрипта: {ruleScriptResult}");
-
-            if (ruleScriptResult && ruleScriptVersion.RuleScript.ProcessScriptId is null)
-            {
-                _logger.LogError($"У прошедшего скрипта-правила отсутствует связь со скриптом-обработчиком. Id версии скрипта: {ruleScriptVersion.Id}.");
-                return null;
-            }
 
             if (ruleScriptResult)
                 return ruleScriptVersion;
