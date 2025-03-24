@@ -25,6 +25,7 @@ try
     builder.Services.AddLogging();
     builder.Services.AddServices();
     builder.Services.AddRepositories();
+    builder.Services.AddRedis(builder.Configuration);
 
     var app = builder.Build();
 

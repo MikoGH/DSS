@@ -1,7 +1,11 @@
-﻿using LuaEngine.Scripts.WebApi.Repositories;
+﻿using LuaEngine.Scripts.WebApi.Models.Options;
+using LuaEngine.Scripts.WebApi.Repositories;
 using LuaEngine.Scripts.WebApi.Repositories.Abstracts;
 using LuaEngine.Scripts.WebApi.Services;
 using LuaEngine.Scripts.WebApi.Services.Abstracts;
+using LuaEngine.Scripts.WebApi.Services.Caching.Abstracts;
+using LuaEngine.Scripts.WebApi.Services.Caching;
+using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
 
 namespace LuaEngine.Scripts.WebApi.Extensions;
 
@@ -36,8 +40,29 @@ public static class ServicesExtensions
         services.AddTransient<IPrefilterScriptRepository, PrefilterScriptRepository>();
         services.AddTransient<IRuleScriptRepository, RuleScriptRepository>();
         services.AddTransient<IProcessScriptRepository, ProcessScriptRepository>();
-        services.AddTransient<IScriptVersionRepository, ScriptVersionRepository>();
+        services.AddTransient<IScriptVersionRepository, ScriptVersionCacheRepository>();
+        services.AddTransient<ScriptVersionRepository>();
 
         return services;
+    }
+
+    /// <summary>
+    /// Зарегистрировать Redis.
+    /// </summary>
+    public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
+    {
+        if (services == null || configuration == null)
+        {
+            throw new ArgumentNullException("services configuration");
+        }
+
+        services.AddSingleton<IRedisConnectionService, RedisConnectionService>(service =>
+            new RedisConnectionService(configuration.GetConnectionString(RedisConnectionString)));
+        services.Configure<CacheOptions>(configuration.GetSection(RedisSectionName));
+        services.Configure<CacheOptions>(configuration);
+        services.AddScoped<ICacheService, CacheService>();
+
+        services.Configure<CacheMaintenanceOptions>(configuration.GetSection(RedisSectionName));
+        services.AddHostedService<CacheMaintenanceService>();
     }
 }

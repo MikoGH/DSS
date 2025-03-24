@@ -56,6 +56,18 @@ public class ScriptVersionRepository : IScriptVersionRepository
     }
 
     /// <inheritdoc/>
+    public async Task<IEnumerable<Guid>> GetAllIdsAsync(PagingModel pagingModel, ScriptVersionIncludeOptions includeOptions, ScriptVersionFilter filter, CancellationToken token)
+    {
+        var scriptIds = await GetQuery(includeOptions)
+            .FilterBy(filter)
+            .WithPaging(pagingModel, null, x => x.Id)
+            .Select(x => x.Id)
+            .ToListAsync(token);
+
+        return scriptIds;
+    }
+
+    /// <inheritdoc/>
     public async Task<ScriptVersion?> GetAsync(Guid id, ScriptVersionIncludeOptions includeOptions, CancellationToken token)
     {
         var script = await GetQuery(includeOptions)

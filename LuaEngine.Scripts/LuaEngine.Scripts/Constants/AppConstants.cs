@@ -19,4 +19,15 @@ public class AppConstants
     /// Название секции строки подключения к БД.
     /// </summary>
     public const string PostgresConnectionStringSectionName = "PostgreSQL";
+
+    /// <summary>
+    /// Имя секции конфигурации Redis в appsettings.
+    /// </summary>
+    public const string RedisSectionName = "Redis";
+
+    /// <summary>
+    /// Название секции в appsettings - connection strings.
+    /// </summary>
+    public const string RedisConnectionString = "Redis";
+
 }

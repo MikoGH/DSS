@@ -21,6 +21,16 @@ public interface IScriptVersionRepository
     public Task<IEnumerable<ScriptVersion>> GetAllAsync(PagingModel pagingModel, ScriptVersionIncludeOptions includeOptions, ScriptVersionFilter filter, CancellationToken token);
 
     /// <summary>
+    /// Получить коллекцию идентификаторов версий скриптов.
+    /// </summary>
+    /// <param name="pagingModel">Модель постраничной разбивки.</param>
+    /// <param name="includeOptions">Опции включения сущностей.</param>
+    /// <param name="filter">Фильтр.</param>
+    /// <param name="token">Токен отмены.</param>
+    /// <returns>Коллекция идентификаторов версий скриптов.</returns>
+    public Task<IEnumerable<Guid>> GetAllIdsAsync(PagingModel pagingModel, ScriptVersionIncludeOptions includeOptions, ScriptVersionFilter filter, CancellationToken token);
+
+    /// <summary>
     /// Получить версию скрипта по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор скрипта.</param>
