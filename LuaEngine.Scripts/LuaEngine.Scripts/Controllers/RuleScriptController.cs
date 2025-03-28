@@ -18,12 +18,15 @@ public class RuleScriptController : Controller
 {
     private readonly IRuleScriptService _ruleScriptService;
     private readonly IMapper _mapper;
+    private readonly ILogger<RuleScriptController> _logger;
 
     public RuleScriptController(IRuleScriptService ruleScriptService,
-                            IMapper mapper)
+                            IMapper mapper,
+                            ILogger<RuleScriptController> logger)
     {
         _ruleScriptService = ruleScriptService;
         _mapper = mapper;
+        _logger = logger;
     }
 
     /// <summary>
@@ -100,7 +103,10 @@ public class RuleScriptController : Controller
         script = await _ruleScriptService.UpdateAsync(id, script, token);
 
         if (script is null)
+        {
+            _logger.LogError("Тестовое сообщение об ошибке.");
             return NotFound();
+        }
 
         var scriptViewModel = _mapper.Map<RuleScriptViewModel>(script);
 

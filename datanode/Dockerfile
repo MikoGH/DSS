@@ -1,0 +1,1 @@
+FROM graylog/graylog-datanode:6.1

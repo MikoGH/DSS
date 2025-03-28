@@ -1,0 +1,1 @@
+FROM graylog/graylog:6.1

@@ -2,7 +2,12 @@ using LuaEngine.Scripts.WebApi.Extensions;
 using LuaEngine.Scripts.WebApi.Middlewares;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
+using Serilog.Sinks.Graylog;
 
 try
 {
@@ -22,7 +27,21 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddAutoMapper(typeof(Program));
     builder.Services.AddLuaEngineSwagger();
-    builder.Services.AddLogging();
+
+    Log.Logger = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .WriteTo.Graylog(new GraylogSinkOptions
+        {
+            HostnameOrAddress = "graylog",
+            Port = 12201,
+            TransportType = Serilog.Sinks.Graylog.Core.Transport.TransportType.Tcp
+        })
+        .CreateLogger();
+
+    builder.Host.UseSerilog();
+
+    //builder.Services.AddLogging();
     builder.Services.AddServices();
     builder.Services.AddRepositories();
     builder.Services.AddRedis(builder.Configuration);
