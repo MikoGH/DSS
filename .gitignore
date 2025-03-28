@@ -140,3 +140,7 @@ _NCrunch*
 appsettings.Development.json
 
 LuaEngine.Automaton/
+
+*.env
+LuaEngine.Prefilter/.env
+LuaEngine.Prefilter/.env

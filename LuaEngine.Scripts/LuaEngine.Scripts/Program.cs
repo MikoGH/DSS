@@ -2,12 +2,9 @@ using LuaEngine.Scripts.WebApi.Extensions;
 using LuaEngine.Scripts.WebApi.Middlewares;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
-using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
 using Serilog.Sinks.Graylog;
+using static LuaEngine.Scripts.WebApi.Constants.AppConstants;
 
 try
 {
@@ -33,7 +30,7 @@ try
         .WriteTo.Console()
         .WriteTo.Graylog(new GraylogSinkOptions
         {
-            HostnameOrAddress = "graylog",
+            HostnameOrAddress = builder.Configuration.GetConnectionString(GraylogConnectionStringSectionName),
             Port = 12201,
             TransportType = Serilog.Sinks.Graylog.Core.Transport.TransportType.Tcp
         })
@@ -41,7 +38,6 @@ try
 
     builder.Host.UseSerilog();
 
-    //builder.Services.AddLogging();
     builder.Services.AddServices();
     builder.Services.AddRepositories();
     builder.Services.AddRedis(builder.Configuration);

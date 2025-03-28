@@ -21,6 +21,11 @@ public class AppConstants
     public const string PostgresConnectionStringSectionName = "PostgreSQL";
 
     /// <summary>
+    /// Название секции строки подключения к Graylog.
+    /// </summary>
+    public const string GraylogConnectionStringSectionName = "Graylog";
+
+    /// <summary>
     /// Имя секции конфигурации Redis в appsettings.
     /// </summary>
     public const string RedisSectionName = "Redis";

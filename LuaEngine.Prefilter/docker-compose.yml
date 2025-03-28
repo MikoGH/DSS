@@ -60,8 +60,8 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_DB=scripts
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=pg1248
+      - POSTGRES_USER="${SCRIPTS_DB_USER}"
+      - POSTGRES_PASSWORD="${SCRIPTS_DB_PASSWORD}"
     volumes: 
       - db_data:/var/lib/postgresql/data
     container_name: scripts_db
@@ -108,7 +108,7 @@ services:
     hostname: "datanode"
     environment:
       GRAYLOG_DATANODE_NODE_ID_FILE: "/var/lib/graylog-datanode/node-id"
-      GRAYLOG_DATANODE_PASSWORD_SECRET: "${GRAYLOG_PASSWORD_SECRET:?Please configure GRAYLOG_PASSWORD_SECRET in the .env file}"
+      GRAYLOG_DATANODE_PASSWORD_SECRET: "${GRAYLOG_PASSWORD_SECRET}"
       GRAYLOG_DATANODE_MONGODB_URI: "mongodb://mongodb:27017/graylog"
     ulimits:
       memlock:
