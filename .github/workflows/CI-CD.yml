@@ -32,6 +32,10 @@ jobs:
       - name: Build Docker images
         run: |
           docker compose -f LuaEngine.Prefilter/docker-compose.yml build
+          
+      - name: Test
+        run: |
+          dotnet test LuaEngine.Scripts/LuaEngine.Scripts.Tests/LuaEngine.Scripts.Tests.csproj --verbosity normal
 
       - name: Push Docker images
         run: |
