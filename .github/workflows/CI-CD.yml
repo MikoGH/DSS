@@ -19,7 +19,7 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v1
         with:
-            dotnet-version: '9.0.3'
+            dotnet-version: '9.0'
 
       - name: Set up Docker
         uses: docker/setup-qemu-action@v2
